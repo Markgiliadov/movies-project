@@ -1,19 +1,21 @@
-.App {
+.Movies {
+  background-color: lightgray;
   text-align: center;
+  margin-top: 40px;
 }
 
-.App-logo {
+.Movies-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
+  .Movies-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
 
-.App-header {
+/* .Movies-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -22,13 +24,13 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
+} */
 
-.App-link {
+.Movies-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+@keyframes Movies-logo-spin {
   from {
     transform: rotate(0deg);
   }

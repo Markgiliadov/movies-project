@@ -1,0 +1,20 @@
+.Logo_Div {
+  display: inline-block;
+  /* margin-top: 25px; */
+  /* width: 20%; */
+  /* height: 30px; */
+  /* margin-bottom: -25px; */
+}
+.Logo {
+  width: 130px;
+  height: 65px;
+  /* height: 100%; */
+  border-radius: 25%;
+  margin-bottom: -25px;
+  margin-top: 4px;
+  margin-right: 40px;
+  /* padding-top: 1em; */
+  /* border: 0.12em solid grey; */
+  /* margin-bottom: -53px; */
+  /* margin-top: 2px; */
+}
