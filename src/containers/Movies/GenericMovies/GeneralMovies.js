@@ -9,7 +9,7 @@ const GeneralMovies = (props) => {
   const [inputEntered, setInputEntered] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   let inputEnablerMsg = null;
-  let movies = null;
+  let movies = [];
   let imgUrl = "https://image.tmdb.org/t/p/w185/";
   let myPath = "";
   let data = null;

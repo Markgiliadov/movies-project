@@ -5,10 +5,11 @@ const useFetch = async (props, searchInput) => {
   //   let myInput = searchInput;
   //   console.log(myInput);
   useEffect(() => {
-    async function fetch() {
-      await FetchingTheMovies(searchInput);
-    }
-    fetch();
+    // async function fetch() {
+    //   await FetchingTheMovies(searchInput);
+    // }
+    // fetch();
+    FetchingTheMovies(searchInput);
     // return setStateMovies([]);
   }, [searchInput]);
   const FetchingTheMovies = async (searchInput) => {
@@ -36,6 +37,7 @@ const useFetch = async (props, searchInput) => {
       await fetch(urlString) // need to give urlString
         .then((res) => res.json())
         .then((json) => {
+          console.log(json.results);
           for (const [i, result] of json.results.entries()) {
             id_info[i] = result.id;
           }
@@ -45,12 +47,13 @@ const useFetch = async (props, searchInput) => {
       for (const [i, id] of id_info.entries()) {
         movieUrl = props.baseMovieUrl + id + props.API_KEY_MOVIE;
         console.log(movieUrl);
-        myMovies[i] = await fetch(movieUrl)
+        const newMvie = (myMovies[i] = await fetch(movieUrl)
           .then(async (res) => await res.json())
-          .then(async (json) => await json);
+          .then((json) => json));
+        setStateMovies(() => myMovies);
       }
+      console.log(stateMovies);
     }
-    setStateMovies([...myMovies]);
   };
   console.log(stateMovies);
   return stateMovies;
