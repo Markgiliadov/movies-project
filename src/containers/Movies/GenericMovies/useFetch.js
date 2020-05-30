@@ -50,8 +50,8 @@ const useFetch = async (props, searchInput) => {
         const newMvie = (myMovies[i] = await fetch(movieUrl)
           .then(async (res) => await res.json())
           .then((json) => json));
-        setStateMovies(() => myMovies);
       }
+      setStateMovies(() => [...myMovies]);
       console.log(stateMovies);
     }
   };
