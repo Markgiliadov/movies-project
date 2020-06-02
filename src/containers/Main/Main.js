@@ -7,23 +7,22 @@ import Register from "../Register/Register";
 import { Component } from "react";
 import fire from "../../Config/Fire";
 class Main extends Component {
-  // componentDidMount() {
-  //   fire.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //       alert("username(mail) " + user.email + "password " + user.uid);
-  //     } else {
-  //       console.log(" no user signed");
-  //     }
-  //   });
-  // }
   render() {
     return (
       <Switch>
         <Route path="/Movies" component={Movies} />
-        <Route path="/Login" component={Login} />
-        <Route path="/Register" component={Register} />
+        <Route
+          path="/Login"
+          render={(props) => <Login {...props} {...this.props} />}
+        />
+        <Route path="/Register" render={(props) => <Register {...props} />} />
         <Route path="/" exact component={Home} />
-        {/* <Redirect path="*" /> */}
+        <Route
+          path="*"
+          render={(props) => (
+            <Register {...props} isValidPath={props.match.path} />
+          )}
+        />
       </Switch>
     );
   }

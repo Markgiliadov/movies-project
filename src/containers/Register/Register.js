@@ -7,18 +7,21 @@ const Register = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState("");
-  // useEffect(() => {
-  // alert("user changed" + user.name);
-  // fire.auth().onAuthStateChanged((user) => {
-  //   if (user) {
-  //     alert("user1 " + user.email);
-  //     console.log(user);
-  //   } else {
-  //     alert("user2 ");
-  //   }
-  // });
-  // }, [user]);
-  const handleSubmit = (event) => {
+  const [wrongPathMsg, setWrongPathMsg] = useState("");
+  useEffect(() => {
+    console.log(props.isValidPath);
+    if (props.isValidPath === "*") {
+      setWrongPathMsg(
+        <h1>
+          404, not found! <br />
+          You can Register :) <br />
+          Redirected from path /{props.match.path}
+        </h1>
+      );
+      props.history.push("/Register");
+    } else setWrongPathMsg("");
+  }, []);
+  const handleLogin = (event) => {
     event.preventDefault();
     fire
       .auth()
@@ -27,11 +30,12 @@ const Register = (props) => {
         setUser(res);
         console.log(res);
       });
-    props.history.push("/");
+    props.history.push("/Login");
   };
   return (
     <div>
-      <form className={classes.form} onSubmit={handleSubmit}>
+      {wrongPathMsg}
+      <form className={classes.form} onSubmit={handleLogin}>
         <label className={classes.label}>
           Username
           <input
@@ -57,7 +61,11 @@ const Register = (props) => {
           />
         </label>
 
-        <input type="submit" className={ButtonClass.button1} />
+        <input
+          type="submit"
+          className={ButtonClass.button1}
+          style={{ cursor: "pointer" }}
+        />
         {/* <Button myFunction={handleSubmit} name="Register" /> */}
       </form>
     </div>

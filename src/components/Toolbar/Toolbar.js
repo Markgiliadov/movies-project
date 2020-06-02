@@ -1,8 +1,10 @@
 import React from "react";
 import classes from "./Toolbar.module.css";
 import { NavLink } from "react-router-dom";
+import Button from "../Button/Button";
 // import { useState } from "react";
 import Logo from "../Logo/Logo";
+import Aux from "../../hoc/Auxil/Auxil";
 // import LoginSideDrawer from "../LoginSideDrawer/LoginSideDrawer";
 const Toolbar = (props) => {
   return (
@@ -25,12 +27,25 @@ const Toolbar = (props) => {
       >
         All Movies
       </NavLink>
-      <NavLink className={classes.button1} to={{ pathname: "/Login" }}>
-        Sign in
-      </NavLink>
-      <NavLink className={classes.button1} to={{ pathname: "/Register" }}>
-        Register
-      </NavLink>
+      {!props.loginStatus ? (
+        <Aux>
+          <NavLink className={classes.button1} to={{ pathname: "/Login" }}>
+            Sign in
+          </NavLink>
+          <NavLink className={classes.button1} to={{ pathname: "/Register" }}>
+            Register
+          </NavLink>
+        </Aux>
+      ) : (
+        <button
+          className={classes.button1}
+          style={{ cursor: "pointer" }}
+          onClick={props.signOut}
+        >
+          Sign Out
+        </button>
+      )}
+
       <NavLink className={classes.button1} to={{ pathname: "/About" }}>
         About
       </NavLink>
