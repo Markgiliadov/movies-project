@@ -47,11 +47,12 @@ const useFetch = async (props, searchInput) => {
       for (const [i, id] of id_info.entries()) {
         movieUrl = props.baseMovieUrl + id + props.API_KEY_MOVIE;
         console.log(movieUrl);
-        const newMvie = (myMovies[i] = await fetch(movieUrl)
-          .then(async (res) => await res.json())
-          .then((json) => json));
+        myMovies[i] = await fetch(movieUrl)
+          .then((res) => res.json())
+          .then((json) => json);
       }
-      setStateMovies(() => [...myMovies]);
+      setStateMovies(() => myMovies);
+
       console.log(stateMovies);
     }
   };

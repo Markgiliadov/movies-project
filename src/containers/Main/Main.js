@@ -23,12 +23,7 @@ class Main extends Component {
         <Route path="/Login" component={Login} />
         <Route path="/Register" component={Register} />
         <Route path="/" exact component={Home} />
-        <Redirect
-          to={{
-            pathname: "*",
-            state: { path: "*" },
-          }}
-        />
+        {/* <Redirect path="*" /> */}
       </Switch>
     );
   }

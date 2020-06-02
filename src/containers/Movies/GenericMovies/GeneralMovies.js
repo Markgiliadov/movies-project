@@ -76,7 +76,7 @@ const GeneralMovies = (props) => {
             } else if (movie.backdrop_path) myPath = movie.backdrop_path;
 
             return (
-              <div key={movie.title}>
+              <div key={movie.id}>
                 <h2>{movie.title} </h2>
                 <h3>{movie.vote_average}</h3>
                 <Movie
