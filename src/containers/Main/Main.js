@@ -16,9 +16,10 @@ class Main extends Component {
           path="/Login"
           render={(props) => <Login {...props} {...this.props} />}
         />
+        <Route path="/About" render={() => <About />} />
         <Route path="/Register" render={(props) => <Register {...props} />} />
+
         <Route path="/" exact component={Home} />
-        <Route path="/About" component={About} />
         <Route
           path="*"
           render={(props) => (
