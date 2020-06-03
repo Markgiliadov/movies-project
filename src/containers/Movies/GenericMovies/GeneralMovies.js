@@ -77,8 +77,8 @@ const GeneralMovies = (props) => {
 
             return (
               <div key={movie.id}>
-                <h2>{movie.title} </h2>
-                <h3>{movie.vote_average}</h3>
+                {/* <h2>{movie.title} </h2>
+                <h3>{movie.vote_average}</h3> */}
                 <Movie
                   isSearched={props.isSearched}
                   key={movie.id}

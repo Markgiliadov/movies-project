@@ -33,11 +33,11 @@ class Home extends Component {
           API_KEY_SEARCH={this.state.API_KEY_SEARCH}
         /> */}
         {/* <label>Popular Movies:</label> */}
-        <h1>Upcoming Movies</h1>
+        <h1 style={{ textAlign: "center" }}>Upcoming Movies</h1>
         <UpcomingMovies />
-        <h1>Popular Movies</h1>
+        <h1 style={{ textAlign: "center" }}>Popular Movies</h1>
         <PopularMovies />
-        <h1>Now Playing Movies</h1>
+        <h1 style={{ textAlign: "center" }}>Now Playing Movies</h1>
         <NowPlayingMovies />
         {/* <Route path="/:id" exact component={Movies} /> */}
         {/* <GenericMovies /> */}

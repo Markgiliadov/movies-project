@@ -4,6 +4,7 @@ import Movies from "../Movies/Movies";
 import Home from "../../components/Home/Home";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
+import About from "../../components/About/About";
 import { Component } from "react";
 import fire from "../../Config/Fire";
 class Main extends Component {
@@ -17,6 +18,7 @@ class Main extends Component {
         />
         <Route path="/Register" render={(props) => <Register {...props} />} />
         <Route path="/" exact component={Home} />
+        <Route path="/About" component={About} />
         <Route
           path="*"
           render={(props) => (

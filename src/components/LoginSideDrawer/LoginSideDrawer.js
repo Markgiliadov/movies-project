@@ -31,7 +31,7 @@ const loginsidedrawer = (props) => {
         />
         <Login
           style={{ height: "80px" }}
-          //  className={attachedClasses.join(" ")}
+          className={attachedClasses.join(" ")}
         />
       </div>
     </div>
