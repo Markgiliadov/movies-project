@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ButtonClass from "../../components/Button/Button.module.css";
 import fire from "../../Config/Fire";
+import loginContext from "../../Contexts/loginContext";
 import classes from "./Register.module.css";
 const Register = (props) => {
+  const stateLoginStatus = useContext(loginContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState("");
   const [wrongPathMsg, setWrongPathMsg] = useState("");
   useEffect(() => {
-    console.log(props.isValidPath);
+    console.log("context works?" + stateLoginStatus);
+    console.log("login status " + test);
+
+    if (localStorage.getItem("JWT")) {
+      props.history.push("/");
+    }
     if (props.isValidPath === "*") {
       setWrongPathMsg(
         <h1>
@@ -21,7 +28,7 @@ const Register = (props) => {
       props.history.push("/Register");
     } else setWrongPathMsg("");
   }, []);
-  const handleLogin = (event) => {
+  const handleRegister = (event) => {
     event.preventDefault();
     fire
       .auth()
@@ -35,7 +42,7 @@ const Register = (props) => {
   return (
     <div>
       {wrongPathMsg}
-      <form className={classes.form} onSubmit={handleLogin}>
+      <form className={classes.form} onSubmit={handleRegister}>
         <label className={classes.label}>
           Username
           <input

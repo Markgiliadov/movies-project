@@ -1,51 +1,94 @@
-import React, { Component } from "react";
+import React, { useEffect, useReducer } from "react";
+import loginContext from "../../Contexts/loginContext";
 import Toolbar from "../../components/Toolbar/Toolbar";
 import Auxil from "../../hoc/Auxil/Auxil";
 import fire from "../../Config/Fire";
 import Main from "../../containers/Main/Main";
-class Layout extends Component {
-  constructor(props) {
-    super(props);
-    this.onAuth = this.onAuth.bind(this);
-    this.signOut = this.signOut.bind(this);
-    this.state = {
-      msg: "NOT_LOGGED",
-      loginStatus: false,
-    };
+const reducer = (state, action) => {
+  console.log(action);
+  switch (action.type) {
+    case "loggedIn":
+      return {
+        loginStatus: true,
+        user: fire.auth().currentUser,
+        loginStateTkn: action.loginStateTkn,
+      };
+    case "loggedOut":
+      return {
+        loginStatus: false,
+        loginStateTkn: null,
+        user: null,
+        username: "",
+        password: "",
+      };
+    case "setUsername":
+      return { ...state, username: action.payload };
+    case "setPassword":
+      return { ...state, password: action.payload };
+    default:
+      return { loginStatus: null, user: null, loginStateTkn: null };
   }
-  componentDidMount() {
-    this.onAuth();
-  }
-  onAuth = () => {
+};
+const Layout = (props) => {
+  // const [msg, setMsg] = useState("");
+  // const [state, setState] = useState({
+  //   loginStatus: false,
+  //   user: null,
+  //   loginStateTkn: null,
+  // });
+  const initialState = {
+    loginStatus: false,
+    username: "",
+    password: "",
+    loginStateTkn: null,
+  };
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    onAuth();
+  }, []);
+
+  const onAuth = () => {
     fire.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log(user);
-        this.setState({ msg: "logged in now", loginStatus: true });
-        // User is signed in.
+        // setMsg("logged in now");
+        console.log(
+          "user signed out: ",
+          " " + state.username,
+          " " + state.password
+        );
+        // console.log(state.loginStatus);
       } else {
-        console.log("no user");
-        this.setState({ msg: "not logged in", loginStatus: false });
-
-        // No user is signed in.
+        // console.log(state.loginStatus);
+        // console.log(
+        //   "user signed out: ",
+        //   " " + state.username,
+        //   " " + state.password
+        // );
+        dispatch({ type: "loggedOut" });
+        localStorage.removeItem("JWT");
       }
     });
   };
-  signOut = () => {
+  const signOut = () => {
     fire
       .auth()
       .signOut()
       .then((res) => {
-        console.log(res);
+        console.log(state.loginStatus);
+        // setMsg("logged out  now");
+        dispatch({ type: "loggedOut" });
+        localStorage.removeItem("JWT");
       });
   };
-  render() {
-    return (
+  return (
+    <loginContext.Provider value={{ state, dispatch }}>
       <Auxil>
-        <Toolbar loginStatus={this.state.loginStatus} signOut={this.signOut} />
-        <Main loginStatus={this.state.loginStatus} msg={this.state.msg} />
+        <Toolbar signOut={signOut} loginStatus={state.loginStatus} />
+        <Main />
       </Auxil>
-    );
-  }
-}
+    </loginContext.Provider>
+  );
+};
 
 export default Layout;

@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 // import Auxil from "../../hoc/Auxil/Auxil";
-import Login from "../../containers/Login/Login";
-import classes from "./Home.module.css";
-import Movies from "../../containers/Movies/Movies";
-import GeneralMovies from "../../containers/Movies/GenericMovies/GeneralMovies";
 import PopularMovies from "../../containers/Movies/PopularMovies/PopularMovies";
 import NowPlayingMovies from "../../containers/Movies/NowPlayingMovies/NowPlayingMovies";
 import UpcomingMovies from "../../containers/Movies/UpcomingMovies/UpcomingMovies";

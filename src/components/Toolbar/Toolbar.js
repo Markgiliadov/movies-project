@@ -37,13 +37,12 @@ const Toolbar = (props) => {
           </NavLink>
         </Aux>
       ) : (
-        <button
+        <Button
           className={classes.button1}
           style={{ cursor: "pointer" }}
-          onClick={props.signOut}
-        >
-          Sign Out
-        </button>
+          myFunction={props.signOut}
+          name="Sign Out"
+        />
       )}
 
       <NavLink className={classes.button1} to={{ pathname: "/About" }}>

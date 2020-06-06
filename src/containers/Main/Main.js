@@ -1,13 +1,15 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Movies from "../Movies/Movies";
 import Home from "../../components/Home/Home";
 import Login from "../Login/Login";
 import Register from "../Register/Register";
 import About from "../../components/About/About";
 import { Component } from "react";
-import fire from "../../Config/Fire";
 class Main extends Component {
+  componentDidMount() {
+    console.log(this.props.loginStatus);
+  }
   render() {
     return (
       <Switch>
@@ -17,9 +19,17 @@ class Main extends Component {
           render={(props) => <Login {...props} {...this.props} />}
         />
         <Route path="/About" render={() => <About />} />
-        <Route path="/Register" render={(props) => <Register {...props} />} />
+        {/* {!this.props.loginStatus ? ( */}
+        <Route
+          path="/Register"
+          render={(props) => (
+            <Register {...props} loginStatus={this.props.loginStatus} />
+          )}
+        />
 
-        <Route path="/" exact component={Home} />
+        <Route path="/" component={Home} />
+        <Route path="" exact component={Home} />
+
         <Route
           path="*"
           render={(props) => (

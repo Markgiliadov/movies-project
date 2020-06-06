@@ -4,7 +4,6 @@ import popularClasses from "../../containers/Movies/PopularMovies/PopularMovies.
 import Rating from "./Rating/Rating";
 const movie = (props) => {
   // const myClassname = props.className;
-  let myClasses = classes;
   let searchedMovie = null;
   let otherMovie = null;
 

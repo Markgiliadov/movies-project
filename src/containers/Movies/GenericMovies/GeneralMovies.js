@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Movie from "../../../components/Movie/Movie";
 import useFetch from "./useFetch";
 import classes from "./GeneralMovies.module.css";
-import No_img from "../../../Assets/NoImg/no-image.png";
 import Searchbar from "../../../components/Searchbar/Searchbar";
-import movie from "../../../components/Movie/Movie";
 const GeneralMovies = (props) => {
   const [stateMovies, setStateMovies] = useState([]);
   const [inputEntered, setInputEntered] = useState(false);
@@ -18,7 +16,6 @@ const GeneralMovies = (props) => {
   let imgUrl = "https://image.tmdb.org/t/p/w185/";
   let myPath = "";
   let data = null;
-  let style = null;
   let searchBar = null;
   let myStyle = null;
 
@@ -46,7 +43,7 @@ const GeneralMovies = (props) => {
   };
   data = useFetch(props, searchInput);
   Promise.resolve(data).then((val) => {
-    if (searchInput != "" || !props.isSearched) {
+    if (searchInput !== "" || !props.isSearched) {
       setInputEntered(true);
       setStateMovies(val);
       // sortMovies(val);
