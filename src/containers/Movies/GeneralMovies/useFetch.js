@@ -11,11 +11,9 @@ const useFetch = (props, searchInput) => {
     let baseUrl = "";
     let midUrl = "";
     let endUrl = "";
-    // async function fetch() {
-    //   await FetchingTheMovies(searchInput);
-    // }
-
     const FetchingTheMovies = async (searchInput) => {
+      console.log("PRINTIG");
+
       if (searchInput !== "" || !props.isSearched) {
         if (props.baseSearchUrl) {
           baseUrl = props.baseSearchUrl;
@@ -31,6 +29,7 @@ const useFetch = (props, searchInput) => {
           .then((json) => {
             for (const [i, result] of json.results.entries()) {
               id_info[i] = result.id;
+              console.log("PRINTIG");
             }
           })
           .catch((error) => console.log(error));
@@ -44,9 +43,7 @@ const useFetch = (props, searchInput) => {
       console.log(myMovies);
       setStateMovies(() => myMovies);
     };
-    if (searchInput !== "") FetchingTheMovies(searchInput);
-
-    // fetch();
+    FetchingTheMovies(searchInput);
   }, [searchInput]);
   console.log(stateMovies);
   return stateMovies;

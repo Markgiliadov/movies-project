@@ -6,6 +6,7 @@ import Login from "../Login/Login";
 import Register from "../Register/Register";
 import About from "../../components/About/About";
 import { Component } from "react";
+import Movie from "../../components/Movie/Movie";
 class Main extends Component {
   componentDidMount() {
     console.log(this.props.loginStatus);
@@ -19,17 +20,15 @@ class Main extends Component {
           render={(props) => <Login {...props} {...this.props} />}
         />
         <Route path="/About" render={() => <About />} />
-        {/* {!this.props.loginStatus ? ( */}
         <Route
           path="/Register"
           render={(props) => (
             <Register {...props} loginStatus={this.props.loginStatus} />
           )}
         />
-
         <Route path="/" component={Home} />
+        <Route path="/:d" render={(props) => <Movie {...props} />} />
         <Route path="" exact component={Home} />
-
         <Route
           path="*"
           render={(props) => (

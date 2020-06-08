@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import classes from "./Movie.module.css";
 import popularClasses from "../../containers/Movies/PopularMovies/PopularMovies.module.css";
 import Rating from "./Rating/Rating";
+
 const Movie = (props) => {
   let searchedMovie = null;
   let otherMovie = null;
@@ -44,10 +45,10 @@ const Movie = (props) => {
       </div>
     );
   return (
-    <div>
+    <>
       {searchedMovie}
       {otherMovie}
-    </div>
+    </>
   );
 };
 

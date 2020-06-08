@@ -1,8 +1,7 @@
 import React from "react";
 import classes from "./LoginSideDrawer.module.css";
 import Logo from "../../Assets/Logo/Logo.png";
-// import Home from "../../components/Home/Home";
-// import { Route } from "react-router-dom";
+
 import Login from "../../containers/Login/Login";
 const loginsidedrawer = (props) => {
   let attachedClasses = [classes.SideDrawer, classes.Close];

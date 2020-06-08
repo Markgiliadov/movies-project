@@ -4,6 +4,8 @@ import useFetch from "./useFetch";
 import classes from "./GeneralMovies.module.css";
 import Searchbar from "../../../components/Searchbar/Searchbar";
 import noImg from "../../../Assets/NoImg/noImg1.png";
+import { NavLink } from "react-router-dom";
+
 const GeneralMovies = (props) => {
   const [stateMovies, setStateMovies] = useState([]);
   const [inputEntered, setInputEntered] = useState(false);
@@ -17,22 +19,22 @@ const GeneralMovies = (props) => {
   let movieImg = null;
   let myStyle = null;
   let myInput = null;
+  data = useFetch(props, searchInput);
+  Promise.resolve(data)
+    .then((val) => {
+      if (searchInput !== "" || !props.isSearched) {
+        setInputEntered(true);
+        setStateMovies(() => val);
+      } else setInputEntered(false);
+    })
+    .catch((err) => console.log(err));
+  movies = [];
 
   const searchMovie = (event) => {
     myInput = event.target.value;
-    movies = [];
     setSearchInput(myInput);
-    Promise.resolve(data)
-      .then((val) => {
-        // console.log(val);
-        if (searchInput !== "" || !props.isSearched) {
-          setInputEntered(true);
-          setStateMovies(() => val);
-        } else setInputEntered(false);
-      })
-      .catch((err) => console.log(err));
   };
-  data = useFetch(props, searchInput);
+
   console.log(data);
 
   if (!props.isSearched) {
@@ -69,12 +71,15 @@ const GeneralMovies = (props) => {
     } else inputEnablerMsg = <p>Please! enter a search input above! :)</p>;
   };
   moviesInit();
+  const changeTheInput = () => {
+    setSearchInput("a");
+  };
   return (
-    <div style={{ alignContent: "center" }}>
+    <>
       {searchBar}
       {inputEnablerMsg}
       {movies}
-    </div>
+    </>
   );
 };
 

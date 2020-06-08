@@ -11,9 +11,6 @@ const Register = (props) => {
   const [user, setUser] = useState("");
   const [wrongPathMsg, setWrongPathMsg] = useState("");
   useEffect(() => {
-    console.log("context works?" + stateLoginStatus);
-    console.log("login status " + test);
-
     if (localStorage.getItem("JWT")) {
       props.history.push("/");
     }
@@ -40,7 +37,7 @@ const Register = (props) => {
     props.history.push("/Login");
   };
   return (
-    <div>
+    <>
       {wrongPathMsg}
       <form className={classes.form} onSubmit={handleRegister}>
         <label className={classes.label}>
@@ -75,7 +72,7 @@ const Register = (props) => {
         />
         {/* <Button myFunction={handleSubmit} name="Register" /> */}
       </form>
-    </div>
+    </>
   );
 };
 

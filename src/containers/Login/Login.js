@@ -18,7 +18,6 @@ const Login = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // console.log("mail: " + username + " pass: " + password);
     fire
       .auth()
       .signInWithEmailAndPassword(username, password)
@@ -30,18 +29,14 @@ const Login = (props) => {
         res.user.getIdTokenResult(true).then((tk) => {
           localStorage.setItem("JWT", tk.token);
           dispatch({ type: "loggedIn", loginStateTkn: tk.token });
-          // setStateData({ loginStateTkn: tk.token });
-          // console.log(loginStateTkn);
         });
       })
       .catch((res) => console.log("err " + res));
     setUsername("");
     setPassword("");
   };
-  // console.log(loginStateTkn);
   console.log(state);
   if (state.loginStateTkn) {
-    // console.log("tkn != null");
     loginForm = null;
   } else {
     loginForm = (
@@ -75,7 +70,6 @@ const Login = (props) => {
       </form>
     );
   }
-  // console.log(fire.auth().currentUser);
 
   return (
     <div className={classes.Login}>
