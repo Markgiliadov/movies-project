@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-// import Auxil from "../../hoc/Auxil/Auxil";
 import PopularMovies from "../../containers/Movies/PopularMovies/PopularMovies";
 import NowPlayingMovies from "../../containers/Movies/NowPlayingMovies/NowPlayingMovies";
 import UpcomingMovies from "../../containers/Movies/UpcomingMovies/UpcomingMovies";
-// import LoginSideDrawer from "../LoginSideDrawer/LoginSideDrawer";
-// import { Route } from "react-router-dom";
-// import Toolbar from "../Toolbar/Toolbar";
+import classes from "./Home.module.css";
 class Home extends Component {
   state = {
     basePopularUrl: "https://api.themoviedb.org/3/movie/popular",

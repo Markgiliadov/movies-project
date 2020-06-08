@@ -1,5 +1,5 @@
 import React from "react";
-import GeneralMovies from "../GenericMovies/GeneralMovies";
+import GeneralMovies from "../GeneralMovies/GeneralMovies";
 
 const PopularMovies = (props) => {
   const basePopularUrl = "https://api.themoviedb.org/3/movie/popular";

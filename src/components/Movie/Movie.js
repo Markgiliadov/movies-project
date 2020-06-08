@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import classes from "./Movie.module.css";
 import popularClasses from "../../containers/Movies/PopularMovies/PopularMovies.module.css";
 import Rating from "./Rating/Rating";
-const movie = (props) => {
-  // const myClassname = props.className;
+const Movie = (props) => {
   let searchedMovie = null;
   let otherMovie = null;
+  let image = null;
 
-  if (props.isSearched)
+  if (props.isSearched) {
     searchedMovie = (
       <div className={classes.movie_card}>
         <div className={classes.info_section}>
@@ -26,7 +26,7 @@ const movie = (props) => {
         </div>
       </div>
     );
-  else
+  } else
     otherMovie = (
       <div className={popularClasses.container}>
         <div className={popularClasses.movie_card}>
@@ -38,30 +38,11 @@ const movie = (props) => {
             />
           </div>
           <div className={popularClasses.movie_content}>
-            <div className={popularClasses.movie_content_header}>
-              {/* <h3 className={popularClasses.movie_title}>{props.title}</h3> */}
-              {/* <div className={popularClasses.imax_logo}></div> */}
-            </div>
-            {/* <div className={popularClasses.movie_info}>
-              <div className={popularClasses.info_section}>
-                {props.description}
-              </div>
-            </div> */}
-
-            {/* <div className={classes.rating}>
-            <Rating name={props.name} rating={props.rating} />
-          </div> */}
+            <div className={popularClasses.movie_content_header}></div>
           </div>
-          {/* <div className={popularClasses.movie_desc}>
-          <p style={{ padding: "8px" }}>{props.description}</p>
-        </div> */}
         </div>
       </div>
     );
-
-  // myClasses = props.classes;
-  // const myClasses = props.classes;
-  // classes = myClasses;
   return (
     <div>
       {searchedMovie}
@@ -70,4 +51,4 @@ const movie = (props) => {
   );
 };
 
-export default movie;
+export default Movie;

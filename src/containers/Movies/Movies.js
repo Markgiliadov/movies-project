@@ -1,5 +1,5 @@
 import React from "react";
-import GeneralMovies from "./GenericMovies/GeneralMovies";
+import GeneralMovies from "./GeneralMovies/GeneralMovies";
 const Movies = () => {
   const baseSearchUrl = "https://api.themoviedb.org/3/search/movie?query=";
   const baseMovieUrl = "https://api.themoviedb.org/3/movie/";

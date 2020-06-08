@@ -39,7 +39,13 @@ const Toolbar = (props) => {
       ) : (
         <Button
           className={classes.button1}
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+            height: "51px",
+            paddingBottom: "0.8em",
+            marginRight: "0.9em",
+            fontWeight: "400",
+          }}
           myFunction={props.signOut}
           name="Sign Out"
         />

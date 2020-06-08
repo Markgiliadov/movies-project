@@ -1,86 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Movie from "../../../components/Movie/Movie";
 import useFetch from "./useFetch";
 import classes from "./GeneralMovies.module.css";
 import Searchbar from "../../../components/Searchbar/Searchbar";
+import noImg from "../../../Assets/NoImg/noImg1.png";
 const GeneralMovies = (props) => {
   const [stateMovies, setStateMovies] = useState([]);
   const [inputEntered, setInputEntered] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-
-  // useEffect(() => {
-  // moviesInit();
-  //}, [stateMovies]);
   let inputEnablerMsg = null;
   let movies = [];
   let imgUrl = "https://image.tmdb.org/t/p/w185/";
-  let myPath = "";
+  let myPath = null;
   let data = null;
   let searchBar = null;
+  let movieImg = null;
   let myStyle = null;
+  let myInput = null;
 
-  //const sortMovies = () => {
-  //stateMovies.sort((a, b) => {
-  //return a.vote_average - b.vote_average;
-  //});
-  // for (movie of stateMovies.entries()) {
-  //   console.log(movie);
-  // }
-  // console.log("sorted");
-  // const newsh = stateMovies.splice(0, stateMovies.length - 8);
-
-  //setStateMovies(stateMovies);
-  // moviesInit();
-  //};
   const searchMovie = (event) => {
-    const myInput = event.target.value;
+    myInput = event.target.value;
+    movies = [];
     setSearchInput(myInput);
-    // if (myInput != "")
-    // else {
-    //   console.log(myInput);
-    // setInputEntered(() => false);
-    // }
+    Promise.resolve(data)
+      .then((val) => {
+        // console.log(val);
+        if (searchInput !== "" || !props.isSearched) {
+          setInputEntered(true);
+          setStateMovies(() => val);
+        } else setInputEntered(false);
+      })
+      .catch((err) => console.log(err));
   };
   data = useFetch(props, searchInput);
-  Promise.resolve(data).then((val) => {
-    if (searchInput !== "" || !props.isSearched) {
-      setInputEntered(true);
-      setStateMovies(() => val);
-      // sortMovies(val);
-    } else setInputEntered(false);
-    // if (searchInput == "") {
-    //   setInputEntered(false);
-    //   setStateMovies([]);
-    // }
-  });
+  console.log(data);
+
   if (!props.isSearched) {
     myStyle = classes.style;
-
-    // stateMovies.splice(0, stateMovies.length - 8);
   } else searchBar = <Searchbar onChange={searchMovie} />;
   const moviesInit = () => {
     if (inputEntered) {
       movies = (
-        <div
-          // style={{ display: "flex", alignContent: "flex-start" }}
-          className={myStyle}
-          // className={classes.style}
-        >
+        <div className={myStyle}>
           {stateMovies.map((movie, index) => {
             if (movie.poster_path) {
               myPath = movie.poster_path;
-              console.log(movie.title);
-            } else if (movie.backdrop_path) myPath = movie.backdrop_path;
-
+              movieImg = imgUrl + myPath;
+            } else if (movie.backdrop_path) {
+              myPath = movie.backdrop_path;
+              movieImg = imgUrl + myPath;
+            } else movieImg = noImg;
             return (
               <div key={movie.id}>
-                {/* <h2>{movie.title} </h2>
-                <h3>{movie.vote_average}</h3> */}
                 <Movie
                   isSearched={props.isSearched}
                   key={movie.id}
                   title={movie.title}
-                  image={imgUrl + myPath}
+                  image={movieImg}
                   description={movie.overview}
                   name={movie.title}
                   rating={movie.vote_average}

@@ -1,5 +1,5 @@
 import React from "react";
-import GeneralMovies from "../GenericMovies/GeneralMovies";
+import GeneralMovies from "../GeneralMovies/GeneralMovies";
 // import classes from "./PopularMovies.module.css";
 
 const NowPlayingMovies = (props) => {
