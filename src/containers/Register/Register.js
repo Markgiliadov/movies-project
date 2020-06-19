@@ -5,10 +5,13 @@ import loginContext from "../../Contexts/loginContext";
 import classes from "./Register.module.css";
 const Register = (props) => {
   const stateLoginStatus = useContext(loginContext);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState("");
+
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+    name: "",
+    phonenumber: "",
+  });
   const [wrongPathMsg, setWrongPathMsg] = useState("");
   useEffect(() => {
     if (localStorage.getItem("JWT")) {
@@ -27,41 +30,69 @@ const Register = (props) => {
   }, []);
   const handleRegister = (event) => {
     event.preventDefault();
+    console.log("email: " + user.email);
     fire
       .auth()
-      .createUserWithEmailAndPassword(email, password)
+      .createUserWithEmailAndPassword(user.email, user.password)
       .then((res) => {
-        setUser(res);
+        // setUser(res.user);
         console.log(res);
+
+        // fire.auth().signInWithEmailAndPassword(res.email, res.password);
       });
     props.history.push("/Login");
+  };
+  const handleInputChange = (e) => {
+    let val = e.target.value;
+    console.log("target.name " + [e.target.name], val);
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
   return (
     <>
       {wrongPathMsg}
       <form className={classes.form} onSubmit={handleRegister}>
         <label className={classes.label}>
-          Username
-          <input
-            type="text"
-            placeholder="Username"
-            onChange={(e) => setName(e.target.value)}
-          />
-        </label>
-        <label className={classes.label}>
           Email
           <input
+            className={classes.input}
+            name="email"
             type="email"
             placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
+            value={user.email}
+            onChange={(e) => handleInputChange(e)}
           />
         </label>
         <label className={classes.label}>
           Password
           <input
+            className={classes.input}
+            name="password"
             type="password"
             placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
+            value={user.password}
+            onChange={(e) => handleInputChange(e)}
+          />
+        </label>
+        <label className={classes.label}>
+          Name
+          <input
+            className={classes.input}
+            name="name"
+            type="name"
+            placeholder="Name"
+            value={user.name}
+            onChange={(e) => handleInputChange(e)}
+          />
+        </label>
+        <label className={classes.label}>
+          Phonenumber
+          <input
+            className={classes.input}
+            name="phonenumber"
+            type="phonenumber"
+            placeholder="Phone Number"
+            value={user.phonenumber}
+            onChange={(e) => handleInputChange(e)}
           />
         </label>
 
@@ -70,7 +101,6 @@ const Register = (props) => {
           className={ButtonClass.button1}
           style={{ cursor: "pointer" }}
         />
-        {/* <Button myFunction={handleSubmit} name="Register" /> */}
       </form>
     </>
   );

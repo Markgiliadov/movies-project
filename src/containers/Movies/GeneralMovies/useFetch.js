@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 
-const useFetch = (props, searchInput) => {
+const useFetch = (props, searchInput, setLoading, dispatch, state) => {
   const [stateMovies, setStateMovies] = useState([]);
 
   useEffect(() => {
+    setStateMovies([]);
     let movieUrl = "";
     let myMovies = [];
     let id_info = [];
@@ -12,6 +13,7 @@ const useFetch = (props, searchInput) => {
     let midUrl = "";
     let endUrl = "";
     const FetchingTheMovies = async (searchInput) => {
+      setStateMovies([]);
       console.log("PRINTIG");
 
       if (searchInput !== "" || !props.isSearched) {
@@ -33,19 +35,29 @@ const useFetch = (props, searchInput) => {
             }
           })
           .catch((error) => console.log(error));
+
         for (const [i, id] of id_info.entries()) {
           movieUrl = props.baseMovieUrl + id + props.API_KEY_MOVIE;
           myMovies[i] = await fetch(movieUrl)
             .then((res) => res.json())
             .then((json) => json);
         }
+        setLoading(false);
+        if (state) dispatch({ type: "spinnerStatus", loading: false });
+
+        setStateMovies(myMovies);
       }
-      console.log(myMovies);
-      setStateMovies(() => myMovies);
+      // console.log(myMovies);
     };
+
     FetchingTheMovies(searchInput);
+    return clean_up(myMovies);
   }, [searchInput]);
-  console.log(stateMovies);
+  // console.log(stateMovies);
+  function clean_up(myMovies) {
+    myMovies = [];
+    setStateMovies([]);
+  }
   return stateMovies;
 };
 

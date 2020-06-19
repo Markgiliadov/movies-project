@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import GeneralMovies from "../GeneralMovies/GeneralMovies";
+import movieInformationContext from "../../../Contexts/movieInformationContext";
 // import classes from "../PopularMovies/PopularMovies.module.css";
 
 const UpcomingMovies = (props) => {
+  const { state, dispatch } = useContext(movieInformationContext);
   const baseUpcomingUrl = "https://api.themoviedb.org/3/movie/upcoming";
   const baseMovieUrl = "https://api.themoviedb.org/3/movie/";
   const API_KEY_MOVIE = "?api_key=d0a9ee76df15c9c8e455000b78e70a56";
   const API_KEY_SEARCH = "&api_key=d0a9ee76df15c9c8e455000b78e70a56";
+  // console.log(state);
   return (
     <GeneralMovies
       isSearched={false}

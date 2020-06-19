@@ -6,7 +6,7 @@ import Login from "../../containers/Login/Login";
 const loginsidedrawer = (props) => {
   let attachedClasses = [classes.SideDrawer, classes.Close];
   if (props.open) {
-    // attachedClasses = [classes.SideDrawer, classes.Open];
+    attachedClasses = [classes.SideDrawer, classes.Open];
   }
   return (
     <div className={attachedClasses.join(" ")} onMouseLeave={props.onLeave}>

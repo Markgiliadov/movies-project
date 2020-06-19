@@ -6,7 +6,8 @@ import Login from "../Login/Login";
 import Register from "../Register/Register";
 import About from "../../components/About/About";
 import { Component } from "react";
-import Movie from "../../components/Movie/Movie";
+// import Appforgag from "../../components/Movie/MovieInformation/Appforgag";
+import MovieInformation from "../../components/Movie/MovieInformation/MovieInformation";
 class Main extends Component {
   componentDidMount() {
     console.log(this.props.loginStatus);
@@ -26,8 +27,8 @@ class Main extends Component {
             <Register {...props} loginStatus={this.props.loginStatus} />
           )}
         />
-        <Route path="/" component={Home} />
-        <Route path="/:d" render={(props) => <Movie {...props} />} />
+        <Route path="/" exact component={Home} />
+        {/* <Route path="/:id" render={(props) => <Appforgag {...props} />} /> */}
         <Route path="" exact component={Home} />
         <Route
           path="*"

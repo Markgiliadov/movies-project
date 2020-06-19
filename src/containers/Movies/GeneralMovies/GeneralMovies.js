@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Movie from "../../../components/Movie/Movie";
 import useFetch from "./useFetch";
 import classes from "./GeneralMovies.module.css";
 import Searchbar from "../../../components/Searchbar/Searchbar";
 import noImg from "../../../Assets/NoImg/noImg1.png";
-import { NavLink } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
+import movieInformationContext from "../../../Contexts/movieInformationContext";
 
 const GeneralMovies = (props) => {
+  const { state, dispatch } = useContext(movieInformationContext);
+  // console.log(stateMovieContext);
+  const [loading, setLoading] = useState(false);
   const [stateMovies, setStateMovies] = useState([]);
   const [inputEntered, setInputEntered] = useState(false);
   const [searchInput, setSearchInput] = useState("");
@@ -19,29 +23,42 @@ const GeneralMovies = (props) => {
   let movieImg = null;
   let myStyle = null;
   let myInput = null;
-  data = useFetch(props, searchInput);
+  // console.log("input entered " + inputEntered);
+  // const setLoadingState = () => {
+  //   setLoading();
+  // };
+  data = useFetch(props, searchInput, setLoading, dispatch, state);
+  // const resolvingData = () => {
   Promise.resolve(data)
     .then((val) => {
       if (searchInput !== "" || !props.isSearched) {
-        setInputEntered(true);
+        movies = [];
+
         setStateMovies(() => val);
+
+        data = null;
       } else setInputEntered(false);
     })
     .catch((err) => console.log(err));
-  movies = [];
-
+  // };
   const searchMovie = (event) => {
+    // resolvingData();
     myInput = event.target.value;
+    if (myInput) {
+      setLoading(true);
+      if (state) dispatch({ type: "spinnerStatus", loading: true }); //dispatch isnt a function?
+      setInputEntered(true);
+    }
     setSearchInput(myInput);
   };
 
-  console.log(data);
-
+  // console.log(data);
   if (!props.isSearched) {
     myStyle = classes.style;
+    stateMovies.splice(7, stateMovies.length - 7);
   } else searchBar = <Searchbar onChange={searchMovie} />;
   const moviesInit = () => {
-    if (inputEntered) {
+    if (inputEntered || !props.isSearched) {
       movies = (
         <div className={myStyle}>
           {stateMovies.map((movie, index) => {
@@ -68,17 +85,26 @@ const GeneralMovies = (props) => {
           })}
         </div>
       );
-    } else inputEnablerMsg = <p>Please! enter a search input above! :)</p>;
+    } else
+      inputEnablerMsg = (
+        <p style={{ textAlign: "center" }}>
+          Please! enter a search input above! :)
+        </p>
+      );
   };
   moviesInit();
-  const changeTheInput = () => {
-    setSearchInput("a");
-  };
+
   return (
     <>
       {searchBar}
       {inputEnablerMsg}
       {movies}
+      <ClipLoader
+        css={{ marginLeft: "40%" }}
+        size={150}
+        color={"#123abc"}
+        loading={loading}
+      />
     </>
   );
 };

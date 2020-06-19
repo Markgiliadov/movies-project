@@ -35,7 +35,7 @@ const Login = (props) => {
     setUsername("");
     setPassword("");
   };
-  console.log(state);
+  // console.log(state);
   if (state.loginStateTkn) {
     loginForm = null;
   } else {

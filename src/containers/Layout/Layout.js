@@ -2,7 +2,8 @@ import React, { useEffect, useReducer } from "react";
 import loginContext from "../../Contexts/loginContext";
 import Toolbar from "../../components/Toolbar/Toolbar";
 import fire from "../../Config/Fire";
-import Main from "../../containers/Main/Main";
+import Main from "../Main/Main";
+
 const reducer = (state, action) => {
   console.log(action);
   switch (action.type) {
@@ -38,18 +39,19 @@ const Layout = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    onAuth();
+    // onAuth();
+    // if(state.loginStateTkn)
   }, []);
 
-  const onAuth = () => {
-    fire.auth().onAuthStateChanged((user) => {
-      if (user) {
-      } else {
-        dispatch({ type: "loggedOut" });
-        localStorage.removeItem("JWT");
-      }
-    });
-  };
+  // const onAuth = () => {
+  //   fire.auth().onAuthStateChanged((user) => {
+  //     if (user) {
+  //     } else {
+  //       dispatch({ type: "loggedOut" });
+  //       localStorage.removeItem("JWT");
+  //     }
+  //   });
+  // };
   const signOut = () => {
     fire
       .auth()

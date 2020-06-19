@@ -40,9 +40,10 @@ const Toolbar = (props) => {
           style={{
             cursor: "pointer",
             height: "51px",
-            paddingBottom: "0.8em",
-            marginRight: "0.9em",
-            fontWeight: "400",
+            paddingBottom: "1.05em",
+            marginRight: "0.7em",
+            // fontWeight: "400",
+            fontSize: "14px",
           }}
           myFunction={props.signOut}
           name="Sign Out"

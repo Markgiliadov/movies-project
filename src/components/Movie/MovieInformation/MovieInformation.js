@@ -1,7 +1,8 @@
-import React from "react";
+// import React from "react";
+// // import classes from "./MovieInformation.module.css";
+// const MovieInformation = (props) => {
+//   console.log("movieinfo render");
+//   return <p>{props.payload}</p>;
+// };
 
-const MovieInformation = (props) => {
-  return <h2>movie information {props.id}</h2>;
-};
-
-export default MovieInformation;
+// export default MovieInformation;

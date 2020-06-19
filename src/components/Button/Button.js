@@ -10,8 +10,13 @@ const mybutton = (props) => {
       className={className}
       onClick={props.myFunction}
       style={props.style}
+      onPointerEnter={props.onHover}
+      onPointerLeave={props.leaveHover}
+      // onTouchMoveCapture={props.onHover}
+      // onTouchStart={props.onHover}
     >
       {props.name}
+      {props.children}
     </button>
   );
 };
