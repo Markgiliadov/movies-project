@@ -15,10 +15,11 @@ body {
   font-weight: 400;
   /* padding-left: 15px; */
 }
+
 .movieTitle {
   width: 100%;
   background-color: rgb(46, 13, 13);
-  height: 25px;
+  height: 23px;
   border-radius: 2px;
   font-weight: 400;
   font-size: 15px;
@@ -26,6 +27,7 @@ body {
   overflow: hidden;
   /* text-align: center; */
 }
+
 .Images {
   /* padding-top: 7px; */
   height: 250px;

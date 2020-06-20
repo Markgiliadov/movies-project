@@ -5,16 +5,44 @@ import fire from "../../Config/Fire";
 import Main from "../Main/Main";
 
 const reducer = (state, action) => {
-  console.log(action);
   switch (action.type) {
+    case "spinnerStatus": {
+      return {
+        ...state,
+        loading: action.loading,
+      };
+    }
+    case "showMovieInfo": {
+      console.log(action.payload.popMovie);
+      return {
+        ...state,
+        loading: false,
+        payload: {
+          popMovie: action.payload.popMovie,
+          showModal: action.payload.showModal,
+        },
+      };
+    }
+    case "closeMovieInfo": {
+      return {
+        ...state,
+        loading: false,
+        payload: {
+          popMovie: null,
+          showModal: false,
+        },
+      };
+    }
     case "loggedIn":
       return {
+        ...state,
         loginStatus: true,
         user: fire.auth().currentUser,
         loginStateTkn: action.loginStateTkn,
       };
     case "loggedOut":
       return {
+        ...state,
         loginStatus: false,
         loginStateTkn: null,
         user: null,
@@ -26,7 +54,16 @@ const reducer = (state, action) => {
     case "setPassword":
       return { ...state, password: action.payload };
     default:
-      return { loginStatus: null, user: null, loginStateTkn: null };
+      return {
+        loginStatus: null,
+        user: null,
+        loginStateTkn: null,
+        showModal: null,
+        payload: {
+          popMovie: null,
+          showModal: false,
+        },
+      };
   }
 };
 const Layout = (props) => {
@@ -35,23 +72,10 @@ const Layout = (props) => {
     username: "",
     password: "",
     loginStateTkn: null,
+    loading: true,
+    payload: { showModal: false, popMovie: "" },
   };
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  useEffect(() => {
-    // onAuth();
-    // if(state.loginStateTkn)
-  }, []);
-
-  // const onAuth = () => {
-  //   fire.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //     } else {
-  //       dispatch({ type: "loggedOut" });
-  //       localStorage.removeItem("JWT");
-  //     }
-  //   });
-  // };
   const signOut = () => {
     fire
       .auth()
@@ -62,12 +86,20 @@ const Layout = (props) => {
         localStorage.removeItem("JWT");
       });
   };
+
   return (
     <loginContext.Provider value={{ state, dispatch }}>
-      <>
+      <div
+        onClick={(e) => {
+          if (state.payload.showModal) {
+            if (!e.target.className.includes("Movie"))
+              dispatch({ type: "closeMovieInfo" });
+          }
+        }}
+      >
         <Toolbar signOut={signOut} loginStatus={state.loginStatus} />
         <Main />
-      </>
+      </div>
     </loginContext.Provider>
   );
 };

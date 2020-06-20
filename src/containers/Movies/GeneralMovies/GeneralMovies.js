@@ -5,10 +5,10 @@ import classes from "./GeneralMovies.module.css";
 import Searchbar from "../../../components/Searchbar/Searchbar";
 import noImg from "../../../Assets/NoImg/noImg1.png";
 import ClipLoader from "react-spinners/ClipLoader";
-import movieInformationContext from "../../../Contexts/movieInformationContext";
+import loginContext from "../../../Contexts/loginContext";
 
 const GeneralMovies = (props) => {
-  const { state, dispatch } = useContext(movieInformationContext);
+  const { state, dispatch } = useContext(loginContext);
   // console.log(stateMovieContext);
   const [loading, setLoading] = useState(false);
   const [stateMovies, setStateMovies] = useState([]);

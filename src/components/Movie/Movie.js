@@ -3,15 +3,14 @@ import classes from "./Movie.module.css";
 import popularClasses from "../../containers/Movies/PopularMovies/PopularMovies.module.css";
 import Rating from "./Rating/Rating";
 // import MovieInformation from "./MovieInformation/MovieInformation";
-import movieInformationContext from "../../Contexts/movieInformationContext";
+import loginContext from "../../Contexts/loginContext";
 import Button from "../Button/Button";
 const Movie = (props) => {
-  const { state, dispatch } = useContext(movieInformationContext);
+  const { state, dispatch } = useContext(loginContext);
 
   // console.log(state);
   let attachedClasses = [popularClasses.container, classes.Close];
   const [myCStyle, setMyCStyle] = useState();
-  const [otherMovieState, setOtherMovieState] = useState(true);
   const [popMovie, setPopMovie] = useState({});
   const [myTitleStyle, setMyTitleStyle] = useState({
     cursor: "pointer",
@@ -21,7 +20,6 @@ const Movie = (props) => {
   let searchedMovie = null;
   let otherMovie = null;
   let movieInformation = null;
-  let image = null;
   let movieTitle = (
     <p className={classes.movieTitle} style={myTitleStyle}>
       {popMovie.title}
@@ -30,7 +28,7 @@ const Movie = (props) => {
   // const setPopMovieInfo = () => {
   useEffect(() => {
     // movieTitle = <p className={classes.movieTitle}>{popMovie.title}</p>;
-
+    // console.log(state);
     setPopMovie({
       title: props.title,
       image: props.image,
@@ -79,13 +77,15 @@ const Movie = (props) => {
 
   const handleMovieInformation = (props) => {
     console.log(popMovie);
+    console.log("POP MOVIE" + state.payload.popMovie + "DONE");
     // const movieInformation = {};
     // console.log("title.... " + movieInformation.title);
-    console.log(state.payload.movieInformation);
+    // console.log(state.payload.movieInformation);
     let showModalToggle = state.payload.showModal;
-    if (state.payload.popMovie == popMovie)
+    if (state.payload.popMovie === popMovie)
       showModalToggle = !state.payload.showModal;
     else showModalToggle = true;
+    console.log("BEFORE dispatching showModal" + showModalToggle);
     dispatch({
       type: "showMovieInfo",
       payload: { popMovie: popMovie, showModal: showModalToggle },
@@ -116,7 +116,8 @@ const Movie = (props) => {
           leaveHover={() => {
             setMyTitleStyle({
               ...myTitleStyle,
-              height: "25px",
+              height: "23px",
+
               color: "white",
               backgroundColor: "darkgrey",
             });

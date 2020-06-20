@@ -1,15 +1,15 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import classes from "./MovieModal.module.css";
-import movieInformationContext from "../../../Contexts/movieInformationContext";
+import loginContext from "../../../Contexts/loginContext";
 import Button from "../../Button/Button";
 const MovieModal = (props) => {
-  const { state, dispatch } = useContext(movieInformationContext);
-  //   const [clickedIn, setClickedIn] = useState(false);
+  const { state, dispatch } = useContext(loginContext);
 
-  const onClose = () => {
+  const onClose = (e) => {
+    console.log(e.target.className);
     dispatch({ type: "closeMovieInfo" });
   };
-  console.log(state);
+
   return (
     <div className={classes.container}>
       <Button
