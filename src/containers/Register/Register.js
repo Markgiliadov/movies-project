@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import ButtonClass from "../../components/Button/Button.module.css";
-import fire from "../../Config/Fire";
+// import fire from "../../FirebaseAuth/Fire";
 import loginContext from "../../Contexts/loginContext";
+import firebaseContext from "../../Contexts/firebaseContext";
 import classes from "./Register.module.css";
 const Register = (props) => {
   const stateLoginStatus = useContext(loginContext);
-
+  const firebase = useContext(firebaseContext);
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -14,6 +15,7 @@ const Register = (props) => {
   });
   const [wrongPathMsg, setWrongPathMsg] = useState("");
   useEffect(() => {
+    console.log(firebaseContext);
     if (localStorage.getItem("JWT")) {
       props.history.push("/");
     }
@@ -31,15 +33,16 @@ const Register = (props) => {
   const handleRegister = (event) => {
     event.preventDefault();
     console.log("email: " + user.email);
-    fire
-      .auth()
-      .createUserWithEmailAndPassword(user.email, user.password)
+    firebase
+      .doCreateUserWithEmailAndPassword(user.email, user.password)
       .then((res) => {
         // setUser(res.user);
         console.log(res);
 
-        // fire.auth().signInWithEmailAndPassword(res.email, res.password);
-      });
+        // firebase.doSignInWithEmailAndPassword(res.email, res.password);
+      })
+      .catch((ex) => console.log(ex));
+    // firebase.doSignInWithEmailAndPassword(user.email, user.password);
     props.history.push("/Login");
   };
   const handleInputChange = (e) => {
@@ -85,7 +88,7 @@ const Register = (props) => {
           />
         </label>
         <label className={classes.label}>
-          Phonenumber
+          <p>Phonenumber</p>
           <input
             className={classes.input}
             name="phonenumber"

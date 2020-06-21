@@ -1,9 +1,9 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useContext } from "react";
 import loginContext from "../../Contexts/loginContext";
 import Toolbar from "../../components/Toolbar/Toolbar";
-import fire from "../../Config/Fire";
+// import fire from "../../FirebaseAuth/Fire";
 import Main from "../Main/Main";
-
+import firebaseContext from "../../Contexts/firebaseContext";
 const reducer = (state, action) => {
   switch (action.type) {
     case "spinnerStatus": {
@@ -33,13 +33,14 @@ const reducer = (state, action) => {
         },
       };
     }
-    case "loggedIn":
+    case "loggedIn": {
       return {
         ...state,
         loginStatus: true,
-        user: fire.auth().currentUser,
+        user: action.payload,
         loginStateTkn: action.loginStateTkn,
       };
+    }
     case "loggedOut":
       return {
         ...state,
@@ -67,6 +68,7 @@ const reducer = (state, action) => {
   }
 };
 const Layout = (props) => {
+  const firebase = useContext(firebaseContext);
   const initialState = {
     loginStatus: false,
     username: "",
@@ -77,14 +79,11 @@ const Layout = (props) => {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const signOut = () => {
-    fire
-      .auth()
-      .signOut()
-      .then((res) => {
-        console.log(state.loginStatus);
-        dispatch({ type: "loggedOut" });
-        localStorage.removeItem("JWT");
-      });
+    firebase.doSignOut().then((res) => {
+      console.log(state.loginStatus);
+      dispatch({ type: "loggedOut" });
+      localStorage.removeItem("JWT");
+    });
   };
 
   return (

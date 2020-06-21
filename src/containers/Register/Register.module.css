@@ -1,7 +1,7 @@
 .form {
-  /* align-items: center;
+  /* align-items: center; */
   display: flex;
-  flex-direction: column; */
+  flex-direction: column;
 
   max-width: 38em;
   padding: 1em 3em 2em 3em;

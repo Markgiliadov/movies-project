@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
 import classes from "./Login.module.css";
-import fire from "../../Config/Fire";
+// import fire from "../../FirebaseAuth/Fire";
 import loginContext from "../../Contexts/loginContext";
+import BarLoader from "react-spinners/BarLoader";
+import firebaseContext from "../../Contexts/firebaseContext";
 
 const Login = (props) => {
+  const firebase = useContext(firebaseContext);
   const { state, dispatch } = useContext(loginContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  let loginForm = null;
+  const [loginSpinnerStatus, setLoginSpinnerStatus] = useState(
+    state.loginStatus
+  );
 
   useEffect(() => {
     const data = localStorage.getItem("JWT");
@@ -18,9 +23,11 @@ const Login = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fire
-      .auth()
-      .signInWithEmailAndPassword(username, password)
+    // loginForm = null;
+    setLoginSpinnerStatus(true);
+
+    firebase
+      .doSignInWithEmailAndPassword(username, password)
       .then((res) => {
         console.log(res.user);
         dispatch({ type: "setUsername", payload: username });
@@ -28,15 +35,21 @@ const Login = (props) => {
 
         res.user.getIdTokenResult(true).then((tk) => {
           localStorage.setItem("JWT", tk.token);
-          dispatch({ type: "loggedIn", loginStateTkn: tk.token });
+          dispatch({
+            type: "loggedIn",
+            loginStateTkn: tk.token,
+            payload: { username: username, password: password },
+          });
+          setLoginSpinnerStatus(false);
         });
       })
       .catch((res) => console.log("err " + res));
     setUsername("");
     setPassword("");
   };
+  let loginForm = null;
   // console.log(state);
-  if (state.loginStateTkn) {
+  if (loginSpinnerStatus || state.loginStatus) {
     loginForm = null;
   } else {
     loginForm = (
@@ -78,6 +91,13 @@ const Login = (props) => {
         {state.loginStatus ? <p>LoggedIN NOW</p> : <p>Not LoggedIn NoW</p>}
       </h1>
       {loginForm}
+      <BarLoader
+        // size={450}
+        height={5}
+        width={"100%"}
+        color={"#123abc"}
+        loading={loginSpinnerStatus}
+      />
     </div>
   );
 };
