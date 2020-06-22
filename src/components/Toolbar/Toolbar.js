@@ -49,10 +49,10 @@ const Toolbar = (props) => {
           name="Sign Out"
         />
       )}
-
+      {/* 
       <NavLink className={classes.button1} to={{ pathname: "/About" }}>
         About
-      </NavLink>
+      </NavLink> */}
     </div>
   );
 };
