@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Logo from "../../Assets/Logo/Logo-2.png";
 import classes from "./Logo.module.css";
-// import Auxil from "../../hoc/Auxil/Auxil";
 import LoginSideDrawer from "../LoginSideDrawer/LoginSideDrawer";
 const MyLogo = () => {
   const [showSideDrawer, setShowSideDrawer] = useState(false);

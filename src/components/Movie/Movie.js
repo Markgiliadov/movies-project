@@ -1,23 +1,51 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import classes from "./Movie.module.css";
 import popularClasses from "../../containers/Movies/PopularMovies/PopularMovies.module.css";
 import Rating from "./Rating/Rating";
-const movie = (props) => {
-  // const myClassname = props.className;
-  let myClasses = classes;
+// import MovieInformation from "./MovieInformation/MovieInformation";
+import loginContext from "../../Contexts/loginContext";
+import Button from "../Button/Button";
+const Movie = (props) => {
+  const { state, dispatch } = useContext(loginContext);
+
+  // console.log(state);
+  let attachedClasses = [popularClasses.container, classes.Close];
+  const [myCStyle, setMyCStyle] = useState();
+  const [popMovie, setPopMovie] = useState({});
+  const [myTitleStyle, setMyTitleStyle] = useState({
+    cursor: "pointer",
+    backgroundColor: "darkgrey",
+    borderRadius: "5px",
+  });
   let searchedMovie = null;
   let otherMovie = null;
-
-  if (props.isSearched)
+  let movieInformation = null;
+  let movieTitle = (
+    <p className={classes.movieTitle} style={myTitleStyle}>
+      {popMovie.title}
+    </p>
+  );
+  // const setPopMovieInfo = () => {
+  useEffect(() => {
+    // movieTitle = <p className={classes.movieTitle}>{popMovie.title}</p>;
+    // console.log(state);
+    setPopMovie({
+      title: props.title,
+      image: props.image,
+      description: props.description,
+    });
+  }, []);
+  // };
+  if (props.isSearched) {
     searchedMovie = (
       <div className={classes.movie_card}>
         <div className={classes.info_section}>
           <div className={classes.movie_header}>
             <h1>{props.title}</h1>
           </div>
-          <div>
+          <>
             <img className={classes.Images} src={props.image} alt="Movie" />
-          </div>
+          </>
           <div className={classes.rating}>
             <Rating name={props.name} rating={props.rating} />
           </div>
@@ -27,9 +55,10 @@ const movie = (props) => {
         </div>
       </div>
     );
-  else
+  } else {
+    // setPopMovieInfo();
     otherMovie = (
-      <div className={popularClasses.container}>
+      <div className={attachedClasses}>
         <div className={popularClasses.movie_card}>
           <div className={popularClasses.movie_header}>
             <img
@@ -39,36 +68,66 @@ const movie = (props) => {
             />
           </div>
           <div className={popularClasses.movie_content}>
-            <div className={popularClasses.movie_content_header}>
-              {/* <h3 className={popularClasses.movie_title}>{props.title}</h3> */}
-              {/* <div className={popularClasses.imax_logo}></div> */}
-            </div>
-            {/* <div className={popularClasses.movie_info}>
-              <div className={popularClasses.info_section}>
-                {props.description}
-              </div>
-            </div> */}
-
-            {/* <div className={classes.rating}>
-            <Rating name={props.name} rating={props.rating} />
-          </div> */}
+            <div className={popularClasses.movie_content_header}></div>
           </div>
-          {/* <div className={popularClasses.movie_desc}>
-          <p style={{ padding: "8px" }}>{props.description}</p>
-        </div> */}
         </div>
       </div>
     );
+  }
 
-  // myClasses = props.classes;
-  // const myClasses = props.classes;
-  // classes = myClasses;
+  const handleMovieInformation = (props) => {
+    console.log(popMovie);
+    console.log("POP MOVIE" + state.payload.popMovie + "DONE");
+    // const movieInformation = {};
+    // console.log("title.... " + movieInformation.title);
+    // console.log(state.payload.movieInformation);
+    let showModalToggle = state.payload.showModal;
+    if (state.payload.popMovie === popMovie)
+      showModalToggle = !state.payload.showModal;
+    else showModalToggle = true;
+    console.log("BEFORE dispatching showModal" + showModalToggle);
+    dispatch({
+      type: "showMovieInfo",
+      payload: { popMovie: popMovie, showModal: showModalToggle },
+    });
+  };
   return (
-    <div>
+    <>
+      {movieInformation}
       {searchedMovie}
-      {otherMovie}
-    </div>
+      {!props.isSearched ? (
+        <Button
+          name={movieTitle}
+          style={{ cursor: "pointer" }}
+          myFunction={handleMovieInformation}
+          onHover={() => {
+            setMyCStyle({
+              ...myCStyle,
+              color: "red",
+              backgroundColor: "black",
+            });
+            setMyTitleStyle({
+              ...myTitleStyle,
+              height: "inherit",
+              color: "#c0bc93",
+              backgroundColor: "grey",
+            });
+          }}
+          leaveHover={() => {
+            setMyTitleStyle({
+              ...myTitleStyle,
+              height: "23px",
+
+              color: "white",
+              backgroundColor: "darkgrey",
+            });
+          }}
+        >
+          {otherMovie}
+        </Button>
+      ) : null}
+    </>
   );
 };
 
-export default movie;
+export default Movie;

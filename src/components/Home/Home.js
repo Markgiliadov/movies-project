@@ -1,49 +1,52 @@
-import React, { Component } from "react";
-// import Auxil from "../../hoc/Auxil/Auxil";
-import Login from "../../containers/Login/Login";
-import classes from "./Home.module.css";
-import Movies from "../../containers/Movies/Movies";
-import GeneralMovies from "../../containers/Movies/GenericMovies/GeneralMovies";
+import React, { useContext } from "react";
 import PopularMovies from "../../containers/Movies/PopularMovies/PopularMovies";
 import NowPlayingMovies from "../../containers/Movies/NowPlayingMovies/NowPlayingMovies";
 import UpcomingMovies from "../../containers/Movies/UpcomingMovies/UpcomingMovies";
-// import LoginSideDrawer from "../LoginSideDrawer/LoginSideDrawer";
-// import { Route } from "react-router-dom";
-// import Toolbar from "../Toolbar/Toolbar";
-class Home extends Component {
-  state = {
-    basePopularUrl: "https://api.themoviedb.org/3/movie/popular",
-    baseMovieUrl: "https://api.themoviedb.org/3/movie/",
-    API_KEY_MOVIE: "?api_key=d0a9ee76df15c9c8e455000b78e70a56",
-    API_KEY_SEARCH: "&api_key=d0a9ee76df15c9c8e455000b78e70a56",
-  };
-  componentDidMount() {
-    console.log(this.props);
+import loginContext from "../../Contexts/loginContext";
+import classes from "./Home.module.css";
+import MovieModal from "../Movie/MovieModal/MovieModal";
+import ClipLoader from "react-spinners/ClipLoader";
+
+const Home = (props) => {
+  const { state, dispatch } = useContext(loginContext);
+
+  let popMovie = null;
+  let allMovies = (
+    <>
+      <h1 onClick={() => {}} style={{ textAlign: "center" }}>
+        Upcoming Movies
+      </h1>
+      <UpcomingMovies />
+      <h1 onClick={() => {}} style={{ textAlign: "center" }}>
+        Popular Movies
+      </h1>
+      <PopularMovies />
+      <h1 onClick={() => {}} style={{ textAlign: "center" }}>
+        Now Playing Movies
+      </h1>
+      <NowPlayingMovies />;
+    </>
+  );
+
+  if (state.payload.showModal) {
+    popMovie = <MovieModal />;
+  } else {
+    popMovie = null;
   }
-  render() {
-    return (
-      <div>
-        {/* <Toolbar drawerToggleClicked={this.sideDrawerToggleHandler} /> */}
-        {/* <Login /> */}
-        {/* <GeneralMovies
-          isPopular
-          basePopularUrl={this.state.basePopularUrl}
-          baseMovieUrl={this.state.baseMovieUrl}
-          API_KEY_MOVIE={this.state.API_KEY_MOVIE}
-          API_KEY_SEARCH={this.state.API_KEY_SEARCH}
-        /> */}
-        {/* <label>Popular Movies:</label> */}
-        <h1>Upcoming Movies</h1>
-        <UpcomingMovies />
-        <h1>Popular Movies</h1>
-        <PopularMovies />
-        <h1>Now Playing Movies</h1>
-        <NowPlayingMovies />
-        {/* <Route path="/:id" exact component={Movies} /> */}
-        {/* <GenericMovies /> */}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {allMovies}
+      {popMovie}
+      <ClipLoader
+        css={{
+          marginLeft: "40%",
+        }}
+        size={150}
+        color={"#123abc"}
+        loading={state.loading}
+      />
+    </div>
+  );
+};
 
 export default Home;

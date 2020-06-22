@@ -11,7 +11,7 @@
   color: #ffffff;
   text-align: center;
   transition: all 0.2s;
-  background-color: lightslategray;
+  background-color: rgb(219, 212, 212);
 }
 .button1:hover {
   color: #000000;
