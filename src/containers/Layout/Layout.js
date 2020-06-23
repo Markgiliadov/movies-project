@@ -34,6 +34,7 @@ const reducer = (state, action) => {
       };
     }
     case "loggedIn": {
+      console.log(state, action.payload);
       return {
         ...state,
         loginStatus: true,
