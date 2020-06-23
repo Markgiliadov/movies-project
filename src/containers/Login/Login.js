@@ -18,6 +18,7 @@ const Login = (props) => {
     const data = localStorage.getItem("JWT");
     if (data) {
       dispatch({ type: "loggedIn", loginStateTkn: data });
+      setUsername(localStorage.getItem("email"));
     } else dispatch({ type: "loggedOut", loginStateTkn: null });
   }, []);
 
@@ -35,6 +36,7 @@ const Login = (props) => {
 
         res.user.getIdTokenResult(true).then((tk) => {
           localStorage.setItem("JWT", tk.token);
+          localStorage.setItem("email", username);
           dispatch({
             type: "loggedIn",
             loginStateTkn: tk.token,
