@@ -29,13 +29,13 @@ body {
 .inputError {
   font-size: 14px;
   outline-color: red;
-  background-color: red;
-  color: black;
+  /* background-color: red; */
+  color: red;
   border-radius: 16px;
   text-align: center;
   padding: 2px 2px;
   padding-left: 3px;
-  margin-top: 4px;
+  margin-top: 8px;
 }
 .input {
   width: 100%;
@@ -44,4 +44,18 @@ body {
   background-color: grey-lightest;
   border: 1px solid grey;
   border-radius: 3px;
+}
+textarea:focus,
+input:focus {
+  outline: none;
+}
+.inputChange {
+  border: 1.2px solid red;
+}
+.inputNotChange {
+  height: 30%;
+  color: orange;
+}
+.inputOnFocus {
+  color: cyan;
 }

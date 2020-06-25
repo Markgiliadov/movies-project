@@ -4,7 +4,13 @@ import ButtonClass from "../../components/Button/Button.module.css";
 import loginContext from "../../Contexts/loginContext";
 import firebaseContext from "../../Contexts/firebaseContext";
 import classes from "./Register.module.css";
-
+const initialInputStyle = [classes.input, ""];
+const initialInputErrorState = {
+  email: "",
+  password: "",
+  name: "",
+  phonenumber: "",
+};
 const errorMessages = {
   email: (
     <h2 className={classes.inputError}>
@@ -30,21 +36,25 @@ const errorMessages = {
 const Register = (props) => {
   const state = useContext(loginContext);
   const firebase = useContext(firebaseContext);
-  const [inputError, setInputError] = useState({
-    email: "",
-    password: "",
-    name: "",
-    phonenumber: "",
-  });
+  const [inputError, setInputError] = useState(initialInputErrorState);
   const [user, setUser] = useState({
     email: "",
     password: "",
     name: "",
     phonenumber: "",
   });
+  const [inputsStyles, setInputsStyles] = useState({
+    email: initialInputStyle,
+    password: initialInputStyle,
+    name: initialInputStyle,
+    phonenumber: initialInputStyle,
+  });
+  const initialValidationStatus = Object.keys(user).length;
+  const [validationStatus, setValidationStatus] = useState(false);
   const [wrongPathMsg, setWrongPathMsg] = useState("");
   let registrationForm = null;
   useEffect(() => {
+    console.log("user length " + initialValidationStatus);
     console.log(firebaseContext);
     if (localStorage.getItem("JWT")) {
       props.history.push("/");
@@ -60,8 +70,29 @@ const Register = (props) => {
       props.history.push("/Register");
     } else setWrongPathMsg("");
   }, []);
-  const handleRegister = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const isInputValidated = inputValidation();
+    if (isInputValidated === initialValidationStatus && user.email)
+      handleRegister(e);
+    else handleBadForm(e);
+  };
+  const inputValidation = () => {
+    let count = initialValidationStatus;
+    Object.entries(inputError).map((ie) => {
+      if (ie[1].toString()) count = count - 1;
+    });
+    return count;
+  };
+  const handleBadForm = (e) => {
+    alert("You must fix your inputs!");
+    // let val = e.target.value;
+    // let vName = e.target.name;
+    // validation(vName, val, e);
+    // setUser({ ...user, [vName]: val });
+  };
+  const handleRegister = (e) => {
+    e.preventDefault();
     console.log("email: " + user.email);
     firebase
       .doCreateUserWithEmailAndPassword(user.email, user.password)
@@ -75,102 +106,145 @@ const Register = (props) => {
     // firebase.doSignInWithEmailAndPassword(user.email, user.password);
     props.history.push("/Login");
   };
-  const validation = (inputName, valueEn) => {
-    let errorMsg = "";
-    switch (inputName) {
-      case "email":
-        {
-          if (valueEn.length < 6) {
-            errorMsg = setInputError({
-              ...inputError,
-              email: errorMessages.email,
-            });
-          } else
-            setInputError({
-              email: "",
-              password: "",
-              name: "",
-              phonenumber: "",
-            });
+  const validation = (inputName, valueEn, e) => {
+    if (valueEn.length > 0)
+      switch (inputName) {
+        case "email":
+          {
+            if (valueEn.length < 6) {
+              setInputsStyles({
+                ...inputsStyles,
+                [inputName]: [classes.input, classes.inputChange],
+              });
+              setInputError({
+                ...inputError,
+                email: errorMessages.email,
+              });
+            } else {
+              setInputsStyles({
+                ...inputsStyles,
+                [inputName]: initialInputStyle,
+              });
+              setInputError({
+                ...inputError,
+                [inputName]: "",
+              });
+            }
+          }
+          break;
+        case "password":
+          {
+            if (valueEn.length < 6) {
+              setInputsStyles({
+                ...inputsStyles,
+                [inputName]: [classes.input, classes.inputChange],
+              });
+              setInputError({
+                ...inputError,
+                password: errorMessages.password,
+              });
+            } else {
+              setInputsStyles({
+                ...inputsStyles,
+                [inputName]: initialInputStyle,
+              });
+              setInputError({
+                ...inputError,
+                [inputName]: "",
+              });
+            }
+          }
+          break;
+        case "name":
+          {
+            if (valueEn.length < 3 || valueEn.length > 24) {
+              setInputsStyles({
+                ...inputsStyles,
+                [inputName]: [classes.input, classes.inputChange],
+              });
+              setInputError({ ...inputError, name: errorMessages.name });
+            } else {
+              setInputsStyles({
+                ...inputsStyles,
+                [inputName]: initialInputStyle,
+              });
+              setInputError({
+                ...inputError,
+                [inputName]: "",
+              });
+            }
+          }
+          break;
+        case "phonenumber":
+          {
+            if (valueEn.length < 10) {
+              setInputsStyles({
+                ...inputsStyles,
+                [inputName]: [classes.input, classes.inputChange],
+              });
+              setInputError({
+                ...inputError,
+                phonenumber: errorMessages.phonenumber,
+              });
+            } else {
+              setInputsStyles({
+                ...inputsStyles,
+                [inputName]: initialInputStyle,
+              });
+              setInputError({
+                ...inputError,
+                [inputName]: "",
+              });
+            }
+          }
+          break;
+        default: {
+          setInputsStyles(initialInputStyle);
+          setInputError(initialInputErrorState);
         }
-        break;
-      case "password":
-        {
-          if (valueEn.length < 6) {
-            setInputError({ ...inputError, password: errorMessages.password });
-          } else
-            setInputError({
-              email: "",
-              password: "",
-              name: "",
-              phonenumber: "",
-            });
-        }
-        break;
-      case "name":
-        {
-          if (valueEn.length < 3 || valueEn.length > 24) {
-            setInputError({ ...inputError, name: errorMessages.name });
-          } else
-            setInputError({
-              email: "",
-              password: "",
-              name: "",
-              phonenumber: "",
-            });
-        }
-        break;
-      case "phonenumber":
-        {
-          if (valueEn.length < 10) {
-            setInputError({
-              ...inputError,
-              phonenumber: errorMessages.phonenumber,
-            });
-          } else
-            setInputError({
-              email: "",
-              password: "",
-              name: "",
-              phonenumber: "",
-            });
-        }
-        break;
-      default:
-        setInputError({ email: "", password: "", name: "", phonenumber: "" });
+      }
+    else {
+      setInputsStyles({ ...inputsStyles, [inputName]: initialInputStyle });
+      setInputError({ ...inputError, [inputName]: "" });
     }
   };
   const handleInputChange = (e) => {
-    console.log(inputError);
+    // console.log(inputError);
     let val = e.target.value;
     let vName = e.target.name;
-    validation(vName, val);
+    validation(vName, val, e);
     setUser({ ...user, [vName]: val });
     // console.log(user);
   };
-  console.log();
+
   if (!state.loginStatus)
     registrationForm = (
-      <form className={classes.form} onSubmit={handleRegister}>
+      <form className={classes.form} onSubmit={handleSubmit} noValidate>
         <label className={classes.label}>
           Email
           <input
-            className={classes.input}
+            className={inputsStyles.email.join(" ")}
             name="email"
             type="email"
             placeholder="Email"
             value={user.email}
-            onChange={(e) => handleInputChange(e)}
-            // onFocus={() => {
-
-            // }}
+            onChange={(e) => {
+              handleInputChange(e);
+              // console.log(inputsStyles.email);
+            }}
+            onFocus={(e) => {
+              setInputsStyles({
+                ...inputsStyles,
+                ["email"]: [...inputsStyles.email, classes.inputOnFocus],
+              });
+            }}
           />
           {inputError.email}
         </label>
         <label className={classes.label}>
           Password
           <input
-            className={classes.input}
+            className={inputsStyles.password.join(" ")}
             name="password"
             type="password"
             placeholder="Password"
@@ -182,7 +256,7 @@ const Register = (props) => {
         <label className={classes.label}>
           Name
           <input
-            className={classes.input}
+            className={inputsStyles.name.join(" ")}
             name="name"
             type="name"
             placeholder="Name"
@@ -192,9 +266,9 @@ const Register = (props) => {
           {inputError.name}
         </label>
         <label className={classes.label}>
-          <p>Phonenumber</p>
+          Phonenumber
           <input
-            className={classes.input}
+            className={inputsStyles.phonenumber.join(" ")}
             name="phonenumber"
             type="phonenumber"
             placeholder="Phone Number"
@@ -205,8 +279,9 @@ const Register = (props) => {
         </label>
         <input
           type="submit"
+          value="Register"
           className={ButtonClass.button1}
-          style={{ cursor: "pointer", height: "49px" }}
+          style={{ cursor: "pointer", height: "45px", marginTop: "5px" }}
         />
       </form>
     );
@@ -219,3 +294,6 @@ const Register = (props) => {
 };
 
 export default Register;
+// adding specific validation for email to include @, etc, same for password, numbers and letters..
+// adding firestore saving users, than having an  example page, access to all movies(only registered)
+// adding review tab on the right of a movie, access to star reviewing system
