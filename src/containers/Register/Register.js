@@ -5,38 +5,73 @@ import loginContext from "../../Contexts/loginContext";
 import firebaseContext from "../../Contexts/firebaseContext";
 import classes from "./Register.module.css";
 const initialInputStyle = [classes.input, ""];
+const initialErrorMsgStyle = [classes.inputErrorInvisible, ""];
 const initialInputErrorState = {
   email: "",
   password: "",
   name: "",
   phonenumber: "",
 };
-const errorMessages = {
-  email: (
-    <h2 className={classes.inputError}>
-      Error, Email can not be less than 6 chars!
-    </h2>
-  ),
-  password: (
-    <h2 className={classes.inputError}>
-      Error, Password can not be less than 6 chars/numbers!
-    </h2>
-  ),
-  name: (
-    <h2 className={classes.inputError}>
-      Error, your Name can not be less than 3, or bigger than 24 chars!
-    </h2>
-  ),
-  phonenumber: (
-    <h2 className={classes.inputError}>
-      Error, Phonenumber can not be less than 10 numbers!
-    </h2>
-  ),
-};
+
 const Register = (props) => {
   const state = useContext(loginContext);
   const firebase = useContext(firebaseContext);
   const [inputError, setInputError] = useState(initialInputErrorState);
+  // const [errorMsgStyle, setErrorMsgStyle] = useState(initialErrorMsgStyle);
+  const errorMessages = {
+    // email: (
+    //   <h2 className={classes.inputError}>
+    //     Error, Email can not be less than 6 chars!
+    //   </h2>
+    // ),
+    badEmail: {
+      emailAt: (
+        <h2 className={classes.inputError}>
+          Error, Email address needs to contain '@', please add it and try
+          again!
+        </h2>
+      ),
+      emailDot: (
+        <h2 className={classes.inputError}>
+          Error, Email address needs to contain '.', please add it and try
+          again!
+        </h2>
+      ),
+      emailLength: (
+        <h2 className={classes.inputError}>
+          Error, Email address username and domain needs to be at least 2 chars,
+          2 chars respectively! please add it and try again!
+        </h2>
+      ),
+      emailAfterDotLength: (
+        <h2 className={classes.inputError}>
+          Error, Email address domain extension(ie: '.com') needs to be at least
+          1 char, please add it and try again!
+        </h2>
+      ),
+      emailBeforeDotLength: (
+        <h2 className={classes.inputError}>
+          Error, Email address domain (ie: @ -this part-) needs to be at least 1
+          char, please add it and try again!
+        </h2>
+      ),
+    },
+    password: (
+      <p className={classes.inputError}>
+        Error, Password can not be less than 6 chars/numbers!
+      </p>
+    ),
+    name: (
+      <h2 className={classes.inputError}>
+        Error, your Name can not be less than 3, or bigger than 24 chars!
+      </h2>
+    ),
+    phonenumber: (
+      <h2 className={classes.inputError}>
+        Error, Phonenumber can not be less than 10 numbers!
+      </h2>
+    ),
+  };
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -49,6 +84,7 @@ const Register = (props) => {
     name: initialInputStyle,
     phonenumber: initialInputStyle,
   });
+  const [valStatus, setValStatus] = useState(false);
   const initialValidationStatus = Object.keys(user).length;
   const [validationStatus, setValidationStatus] = useState(false);
   const [wrongPathMsg, setWrongPathMsg] = useState("");
@@ -73,7 +109,13 @@ const Register = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const isInputValidated = inputValidation();
-    if (isInputValidated === initialValidationStatus && user.email)
+    if (
+      isInputValidated === initialValidationStatus &&
+      user.email &&
+      user.password &&
+      user.name &&
+      user.phonenumber
+    )
       handleRegister(e);
     else handleBadForm(e);
   };
@@ -94,108 +136,116 @@ const Register = (props) => {
   const handleRegister = (e) => {
     e.preventDefault();
     console.log("email: " + user.email);
-    firebase
-      .doCreateUserWithEmailAndPassword(user.email, user.password)
-      .then((res) => {
-        // setUser(res.user);
-        console.log(res);
+    firebase.doCreateUserWithEmailAndPassword(user.email, user.password);
 
-        // firebase.doSignInWithEmailAndPassword(res.email, res.password);
-      })
-      .catch((ex) => console.log(ex));
+    // const db = firebase.firestore();
+    // db.collection("Testing")
+    //   .doc("inTesting")
+    //   .set({ name: "just a test" })
+    //   .then((res) => {
+    //     console.log(res);
+    firebase.doAddUser(user.email, user.password, user.name, user.phonenumber); // setUser(res.user);
+    // console.log(res);
+
+    // firebase.doSignInWithEmailAndPassword(res.email, res.password);
+    // })
+    // .catch((ex) => console.log(ex));
     // firebase.doSignInWithEmailAndPassword(user.email, user.password);
     props.history.push("/Login");
+  };
+  const handleEmailBadFormat = (valueEn) => {
+    // let valStatus = false;
+    let firstStr = "";
+    let secondStr = "";
+    let thirdStr = "";
+    let tempVal = "";
+    let afterAt = "";
+
+    if (valueEn.includes("@")) {
+      [firstStr, afterAt] = valueEn.split("@");
+      secondStr = afterAt;
+      console.log(valStatus, firstStr, afterAt);
+      if (firstStr.length > 1 && secondStr.length > 2) {
+        setInputs("email", false);
+        console.log(valStatus, firstStr, secondStr);
+        setInputs("email", false);
+        if (afterAt.includes(".")) {
+          [secondStr, thirdStr] = afterAt.split(".");
+          if (secondStr.length > 0) {
+            if (thirdStr.length > 0) setInputs("email", false);
+            else
+              setInputs(
+                "email",
+                true,
+                errorMessages.badEmail.emailAfterDotLength
+              );
+          } else
+            setInputs(
+              "email",
+              true,
+              errorMessages.badEmail.emailBeforeDotLength
+            );
+        } else setInputs("email", true, errorMessages.badEmail.emailDot);
+      } else setInputs("email", true, errorMessages.badEmail.emailLength);
+    } else setInputs("email", true, errorMessages.badEmail.emailAt);
+  };
+  const handlePasswordBadFormat = (valueEn) => {
+    if (valueEn.length < 6) setInputs("password", true, errorMessages.password);
+    else setInputs("password", false);
+  };
+  const handleNameBadFormat = (valueEn) => {
+    if (valueEn.length < 3 || valueEn.length > 24)
+      setInputs("name", true, errorMessages.name);
+    else setInputs("name", false);
+  };
+  const handlePhonenumberBadFormat = (valueEn) => {
+    if (valueEn.length < 10)
+      setInputs("phonenumber", true, errorMessages.phonenumber);
+    else setInputs("phonenumber", false);
+  };
+  const setInputs = (keyInput, dangerStyle, errorProp) => {
+    if (dangerStyle) {
+      setInputsStyles({
+        ...inputsStyles,
+        [keyInput]: [classes.input, classes.inputChange],
+      });
+      setInputError({
+        ...inputError,
+        [keyInput]: errorProp,
+      });
+    } else {
+      setInputsStyles({
+        ...inputsStyles,
+        [keyInput]: initialInputStyle,
+      });
+      setInputError({
+        ...inputError,
+        [keyInput]: "",
+      });
+    }
   };
   const validation = (inputName, valueEn, e) => {
     if (valueEn.length > 0)
       switch (inputName) {
         case "email":
           {
-            if (valueEn.length < 6) {
-              setInputsStyles({
-                ...inputsStyles,
-                [inputName]: [classes.input, classes.inputChange],
-              });
-              setInputError({
-                ...inputError,
-                email: errorMessages.email,
-              });
-            } else {
-              setInputsStyles({
-                ...inputsStyles,
-                [inputName]: initialInputStyle,
-              });
-              setInputError({
-                ...inputError,
-                [inputName]: "",
-              });
-            }
+            handleEmailBadFormat(valueEn);
           }
           break;
         case "password":
           {
-            if (valueEn.length < 6) {
-              setInputsStyles({
-                ...inputsStyles,
-                [inputName]: [classes.input, classes.inputChange],
-              });
-              setInputError({
-                ...inputError,
-                password: errorMessages.password,
-              });
-            } else {
-              setInputsStyles({
-                ...inputsStyles,
-                [inputName]: initialInputStyle,
-              });
-              setInputError({
-                ...inputError,
-                [inputName]: "",
-              });
-            }
+            handlePasswordBadFormat(valueEn);
+            // setErrorMsgStyle([classes.inputError]);
           }
           break;
         case "name":
           {
-            if (valueEn.length < 3 || valueEn.length > 24) {
-              setInputsStyles({
-                ...inputsStyles,
-                [inputName]: [classes.input, classes.inputChange],
-              });
-              setInputError({ ...inputError, name: errorMessages.name });
-            } else {
-              setInputsStyles({
-                ...inputsStyles,
-                [inputName]: initialInputStyle,
-              });
-              setInputError({
-                ...inputError,
-                [inputName]: "",
-              });
-            }
+            handleNameBadFormat(valueEn);
           }
           break;
         case "phonenumber":
           {
-            if (valueEn.length < 10) {
-              setInputsStyles({
-                ...inputsStyles,
-                [inputName]: [classes.input, classes.inputChange],
-              });
-              setInputError({
-                ...inputError,
-                phonenumber: errorMessages.phonenumber,
-              });
-            } else {
-              setInputsStyles({
-                ...inputsStyles,
-                [inputName]: initialInputStyle,
-              });
-              setInputError({
-                ...inputError,
-                [inputName]: "",
-              });
-            }
+            handlePhonenumberBadFormat(valueEn);
           }
           break;
         default: {
@@ -232,12 +282,12 @@ const Register = (props) => {
               handleInputChange(e);
               // console.log(inputsStyles.email);
             }}
-            onFocus={(e) => {
-              setInputsStyles({
-                ...inputsStyles,
-                ["email"]: [...inputsStyles.email, classes.inputOnFocus],
-              });
-            }}
+            // onFocus={(e) => {
+            //   setInputsStyles({
+            //     ...inputsStyles,
+            //     ["email"]: [...inputsStyles.email, classes.inputOnFocus],
+            //   });
+            // }}
           />
           {inputError.email}
         </label>
@@ -287,6 +337,13 @@ const Register = (props) => {
     );
   return (
     <>
+      <button
+        onClick={() => {
+          firebase.doGetUsers();
+        }}
+      >
+        get usr
+      </button>
       {wrongPathMsg}
       {registrationForm}
     </>

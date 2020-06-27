@@ -26,9 +26,13 @@ body {
   color: grey-dark;
   background-color: grey-light;
 }
+.inputErrorInvisible {
+  height: -20px;
+  /* visibility: hidden; */
+}
 .inputError {
   font-size: 14px;
-  outline-color: red;
+  /* outline-color: red; */
   /* background-color: red; */
   color: red;
   border-radius: 16px;
@@ -36,6 +40,11 @@ body {
   padding: 2px 2px;
   padding-left: 3px;
   margin-top: 8px;
+  transition-duration: 500ms;
+  transition-property: color;
+  transform: translateY(20px);
+  transition-timing-function: ease-in-out;
+  visibility: visible;
 }
 .input {
   width: 100%;
@@ -50,7 +59,8 @@ input:focus {
   outline: none;
 }
 .inputChange {
-  border: 1.2px solid red;
+  border: 1.7px solid red;
+  transition-duration: 500ms;
 }
 .inputNotChange {
   height: 30%;
