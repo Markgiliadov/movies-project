@@ -4,6 +4,9 @@ import ButtonClass from "../../components/Button/Button.module.css";
 import loginContext from "../../Contexts/loginContext";
 import firebaseContext from "../../Contexts/firebaseContext";
 import classes from "./Register.module.css";
+import ClipLoader from "react-spinners/ClipLoader";
+import FirebaseStore from "../../FirebaseAuth/Firebase";
+import NotAvailableIcon from "../../Assets/NotAvailableEmailIcon/X-icon.png";
 const initialInputStyle = [classes.input, ""];
 const initialErrorMsgStyle = [classes.inputErrorInvisible, ""];
 const initialInputErrorState = {
@@ -15,7 +18,7 @@ const initialInputErrorState = {
 
 const Register = (props) => {
   const state = useContext(loginContext);
-  const firebase = useContext(firebaseContext);
+  // const firebase = useContext(firebaseContext);
   const [inputError, setInputError] = useState(initialInputErrorState);
   // const [errorMsgStyle, setErrorMsgStyle] = useState(initialErrorMsgStyle);
   const errorMessages = {
@@ -25,6 +28,11 @@ const Register = (props) => {
     //   </h2>
     // ),
     badEmail: {
+      emailUnavailable: (
+        <h2 className={classes.inputUnavailable}>
+          This Email is already taken, please try a different one and try again!
+        </h2>
+      ),
       emailAt: (
         <h2 className={classes.inputError}>
           Error, Email address needs to contain '@', please add it and try
@@ -84,10 +92,13 @@ const Register = (props) => {
     name: initialInputStyle,
     phonenumber: initialInputStyle,
   });
+  const [loadingEmail, setLoadingEmail] = useState(false);
+  const [emailAvailability, setEmailAvailability] = useState(true);
   const [valStatus, setValStatus] = useState(false);
   const initialValidationStatus = Object.keys(user).length;
   const [validationStatus, setValidationStatus] = useState(false);
   const [wrongPathMsg, setWrongPathMsg] = useState("");
+  const [emailAvailabilityLogo, setEmailAvailabilityLogo] = useState(null);
   let registrationForm = null;
   useEffect(() => {
     console.log("user length " + initialValidationStatus);
@@ -106,6 +117,9 @@ const Register = (props) => {
       props.history.push("/Register");
     } else setWrongPathMsg("");
   }, []);
+  useEffect(() => {
+    setEmailAvailabilityLogo(null);
+  }, [user.email]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const isInputValidated = inputValidation();
@@ -136,7 +150,7 @@ const Register = (props) => {
   const handleRegister = (e) => {
     e.preventDefault();
     console.log("email: " + user.email);
-    firebase.doCreateUserWithEmailAndPassword(user.email, user.password);
+    // firebase.doCreateUserWithEmailAndPassword(user.email, user.password);
 
     // const db = firebase.firestore();
     // db.collection("Testing")
@@ -144,7 +158,7 @@ const Register = (props) => {
     //   .set({ name: "just a test" })
     //   .then((res) => {
     //     console.log(res);
-    firebase.doAddUser(user.email, user.password, user.name, user.phonenumber); // setUser(res.user);
+    // firebase.doAddUser(user.email, user.password, user.name, user.phonenumber); // setUser(res.user);
     // console.log(res);
 
     // firebase.doSignInWithEmailAndPassword(res.email, res.password);
@@ -152,6 +166,49 @@ const Register = (props) => {
     // .catch((ex) => console.log(ex));
     // firebase.doSignInWithEmailAndPassword(user.email, user.password);
     props.history.push("/Login");
+  };
+  const checkEmailAvailablity = (valueEn) => {
+    const db = FirebaseStore.firestore();
+    db.collection("users")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log("data email " + doc.data().email, "value en " + valueEn);
+          if (doc.data().email == valueEn) {
+            setInputs("email", true, errorMessages.badEmail.emailUnavailable);
+            setEmailAvailabilityLogo(
+              <img className={classes.xicon} src={NotAvailableIcon} />
+            );
+            setEmailAvailability(false);
+            console.log(emailAvailability);
+          } else {
+            setEmailAvailabilityLogo(
+              <svg
+                className={classes.checkmark}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 52 52"
+              >
+                <circle
+                  className={classes.checkmark__circle}
+                  cx="26"
+                  cy="26"
+                  r="25"
+                  fill="none"
+                />
+                <path
+                  className={classes.checkmark__check}
+                  fill="none"
+                  d="M14.1 27.2l7.1 7.2 16.7-16.8"
+                />
+              </svg>
+            );
+            setEmailAvailability(true);
+          }
+        });
+
+        setLoadingEmail(false);
+      });
+    setEmailAvailabilityLogo(null);
   };
   const handleEmailBadFormat = (valueEn) => {
     // let valStatus = false;
@@ -164,21 +221,25 @@ const Register = (props) => {
     if (valueEn.includes("@")) {
       [firstStr, afterAt] = valueEn.split("@");
       secondStr = afterAt;
-      console.log(valStatus, firstStr, afterAt);
+      // console.log(valStatus, firstStr, afterAt);
       if (firstStr.length > 1 && secondStr.length > 2) {
         setInputs("email", false);
-        console.log(valStatus, firstStr, secondStr);
+        // console.log(valStatus, firstStr, secondStr);
         setInputs("email", false);
         if (afterAt.includes(".")) {
           [secondStr, thirdStr] = afterAt.split(".");
           if (secondStr.length > 0) {
-            if (thirdStr.length > 0) setInputs("email", false);
-            else
+            if (thirdStr.length > 0) {
+              setInputs("email", false);
+              setLoadingEmail(true);
+              checkEmailAvailablity(valueEn);
+            } else {
               setInputs(
                 "email",
                 true,
                 errorMessages.badEmail.emailAfterDotLength
               );
+            }
           } else
             setInputs(
               "email",
@@ -205,9 +266,11 @@ const Register = (props) => {
   };
   const setInputs = (keyInput, dangerStyle, errorProp) => {
     if (dangerStyle) {
+      // setEmailAvailabilityLogo(null);
+
       setInputsStyles({
         ...inputsStyles,
-        [keyInput]: [classes.input, classes.inputChange],
+        [keyInput]: [classes.input, classes.inputChangeError],
       });
       setInputError({
         ...inputError,
@@ -216,7 +279,7 @@ const Register = (props) => {
     } else {
       setInputsStyles({
         ...inputsStyles,
-        [keyInput]: initialInputStyle,
+        [keyInput]: [classes.input, classes.inputChange],
       });
       setInputError({
         ...inputError,
@@ -225,6 +288,8 @@ const Register = (props) => {
     }
   };
   const validation = (inputName, valueEn, e) => {
+    // setEmailAvailabilityLogo(null);
+
     if (valueEn.length > 0)
       switch (inputName) {
         case "email":
@@ -272,23 +337,31 @@ const Register = (props) => {
       <form className={classes.form} onSubmit={handleSubmit} noValidate>
         <label className={classes.label}>
           Email
-          <input
+          <div
             className={inputsStyles.email.join(" ")}
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={user.email}
-            onChange={(e) => {
-              handleInputChange(e);
-              // console.log(inputsStyles.email);
-            }}
-            // onFocus={(e) => {
-            //   setInputsStyles({
-            //     ...inputsStyles,
-            //     ["email"]: [...inputsStyles.email, classes.inputOnFocus],
-            //   });
-            // }}
-          />
+            style={{ display: "flex" }}
+          >
+            <input
+              className={inputsStyles.email.join(" ")}
+              style={{ border: "none", padding: "0" }}
+              name="email"
+              type="email"
+              placeholder="Email"
+              value={user.email}
+              onChange={(e) => {
+                setEmailAvailabilityLogo(null);
+
+                handleInputChange(e);
+              }}
+            />
+            <ClipLoader
+              css={{ marginLeft: "2%", marginTop: "0.5%" }}
+              size={15}
+              color={"#123abc"}
+              loading={loadingEmail}
+            />
+            {loadingEmail ? null : emailAvailabilityLogo}
+          </div>
           {inputError.email}
         </label>
         <label className={classes.label}>
@@ -337,13 +410,7 @@ const Register = (props) => {
     );
   return (
     <>
-      <button
-        onClick={() => {
-          firebase.doGetUsers();
-        }}
-      >
-        get usr
-      </button>
+      <button onClick={() => {}}>get usr</button>
       {wrongPathMsg}
       {registrationForm}
     </>
