@@ -93,7 +93,7 @@ const Register = (props) => {
     phonenumber: initialInputStyle,
   });
   const [loadingEmail, setLoadingEmail] = useState(false);
-  const [emailAvailability, setEmailAvailability] = useState(true);
+  const [emailAvailability, setEmailAvailability] = useState(null);
   const [valStatus, setValStatus] = useState(false);
   const initialValidationStatus = Object.keys(user).length;
   const [validationStatus, setValidationStatus] = useState(false);
@@ -101,8 +101,6 @@ const Register = (props) => {
   const [emailAvailabilityLogo, setEmailAvailabilityLogo] = useState(null);
   let registrationForm = null;
   useEffect(() => {
-    console.log("user length " + initialValidationStatus);
-    console.log(firebaseContext);
     if (localStorage.getItem("JWT")) {
       props.history.push("/");
     }
@@ -118,8 +116,37 @@ const Register = (props) => {
     } else setWrongPathMsg("");
   }, []);
   useEffect(() => {
-    setEmailAvailabilityLogo(null);
-  }, [user.email]);
+    // setTimeout(() => {
+    // setEmailAvailabilityLogo(() => null);
+    if (emailAvailability)
+      setEmailAvailabilityLogo(
+        <svg
+          className={classes.checkmark}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 52 52"
+        >
+          <circle
+            className={classes.checkmark__circle}
+            cx="26"
+            cy="26"
+            r="25"
+            fill="none"
+          />
+          <path
+            className={classes.checkmark__check}
+            fill="none"
+            d="M14.1 27.2l7.1 7.2 16.7-16.8"
+          />
+        </svg>
+      );
+    else setEmailAvailabilityLogo(null);
+    // }, 1500);
+    console.log("email availability " + emailAvailability);
+  }, [emailAvailability]);
+  // useEffect(() => {
+  //   setEmailAvailabilityLogo(null);
+  //   console.log("hmmmmmmm");
+  // }, [emailAvailability]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const isInputValidated = inputValidation();
@@ -167,48 +194,38 @@ const Register = (props) => {
     // firebase.doSignInWithEmailAndPassword(user.email, user.password);
     props.history.push("/Login");
   };
-  const checkEmailAvailablity = (valueEn) => {
+  const checkEmailAvailablity = async (valueEn) => {
     const db = FirebaseStore.firestore();
-    db.collection("users")
+    let emailavailable = null;
+    await db
+      .collection("users")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           console.log("data email " + doc.data().email, "value en " + valueEn);
           if (doc.data().email == valueEn) {
-            setInputs("email", true, errorMessages.badEmail.emailUnavailable);
+            // emailavailable = false;
+            setInputs(
+              "email",
+              true,
+              errorMessages.badEmail.emailUnavailable,
+              true
+            );
             setEmailAvailabilityLogo(
               <img className={classes.xicon} src={NotAvailableIcon} />
             );
-            setEmailAvailability(false);
+            // setEmailAvailability(() => false);
             console.log(emailAvailability);
+            return false;
           } else {
-            setEmailAvailabilityLogo(
-              <svg
-                className={classes.checkmark}
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 52 52"
-              >
-                <circle
-                  className={classes.checkmark__circle}
-                  cx="26"
-                  cy="26"
-                  r="25"
-                  fill="none"
-                />
-                <path
-                  className={classes.checkmark__check}
-                  fill="none"
-                  d="M14.1 27.2l7.1 7.2 16.7-16.8"
-                />
-              </svg>
-            );
-            setEmailAvailability(true);
+            emailavailable = true;
+            // setEmailAvailability(() => true);
           }
         });
-
-        setLoadingEmail(false);
+        setLoadingEmail(() => false);
+        return emailavailable;
       });
-    setEmailAvailabilityLogo(null);
+    //
   };
   const handleEmailBadFormat = (valueEn) => {
     // let valStatus = false;
@@ -231,9 +248,10 @@ const Register = (props) => {
           if (secondStr.length > 0) {
             if (thirdStr.length > 0) {
               setInputs("email", false);
-              setLoadingEmail(true);
-              checkEmailAvailablity(valueEn);
+              setLoadingEmail(() => true);
+              setEmailAvailability(() => checkEmailAvailablity(valueEn));
             } else {
+              // setEmailAvailabilityLogo(null);
               setInputs(
                 "email",
                 true,
@@ -264,16 +282,33 @@ const Register = (props) => {
       setInputs("phonenumber", true, errorMessages.phonenumber);
     else setInputs("phonenumber", false);
   };
-  const setInputs = (keyInput, dangerStyle, errorProp) => {
-    if (dangerStyle) {
-      // setEmailAvailabilityLogo(null);
-
+  const setInputs = (keyInput, dangerStyle, errorProp, emailUnavailable) => {
+    if (emailUnavailable) {
       setInputsStyles({
         ...inputsStyles,
-        [keyInput]: [classes.input, classes.inputChangeError],
+        [keyInput]: [classes.input, classes.inputChangeUnavailable],
       });
       setInputError({
         ...inputError,
+        [keyInput]: errorProp,
+      });
+    } else if (dangerStyle) {
+      // setEmailAvailabilityLogo(null);
+      console.log(inputsStyles);
+      let sameStyles = inputsStyles;
+      let sameError = inputError;
+      for (let [key, value] of Object.entries(sameStyles)) {
+        if (key !== keyInput) sameStyles[key] = initialInputStyle;
+      }
+      for (let [key, value] of Object.entries(sameError)) {
+        if (key !== keyInput) sameError[key] = "";
+      }
+      setInputsStyles({
+        ...sameStyles,
+        [keyInput]: [classes.input, classes.inputChangeError],
+      });
+      setInputError({
+        ...sameError,
         [keyInput]: errorProp,
       });
     } else {
@@ -349,9 +384,16 @@ const Register = (props) => {
               placeholder="Email"
               value={user.email}
               onChange={(e) => {
-                setEmailAvailabilityLogo(null);
-
+                setLoadingEmail(false);
+                // setEmailAvailabilityLogo(null);
+                setEmailAvailability(null);
+                // setEmailAvailabilityLogo(() => null);
                 handleInputChange(e);
+              }}
+              onClick={(e) => {
+                console.log(e.target.name);
+                const keyName = e.target.name;
+                setInputs(keyName, true, errorMessages.keyName);
               }}
             />
             <ClipLoader
@@ -360,7 +402,9 @@ const Register = (props) => {
               color={"#123abc"}
               loading={loadingEmail}
             />
+            {/* {loadingEmail ? null :  */}
             {loadingEmail ? null : emailAvailabilityLogo}
+            {/* } */}
           </div>
           {inputError.email}
         </label>
@@ -373,6 +417,11 @@ const Register = (props) => {
             placeholder="Password"
             value={user.password}
             onChange={(e) => handleInputChange(e)}
+            onClick={(e) => {
+              console.log(e.target.name);
+              const keyName = e.target.name;
+              setInputs(keyName, true, errorMessages.keyName);
+            }}
           />
           {inputError.password}
         </label>
@@ -385,6 +434,11 @@ const Register = (props) => {
             placeholder="Name"
             value={user.name}
             onChange={(e) => handleInputChange(e)}
+            onClick={(e) => {
+              console.log(e.target.name);
+              const keyName = e.target.name;
+              setInputs(keyName, true, errorMessages.keyName);
+            }}
           />
           {inputError.name}
         </label>
@@ -397,6 +451,11 @@ const Register = (props) => {
             placeholder="Phone Number"
             value={user.phonenumber}
             onChange={(e) => handleInputChange(e)}
+            onClick={(e) => {
+              console.log(e.target.name);
+              const keyName = e.target.name;
+              setInputs(keyName, true, errorMessages.keyName);
+            }}
           />
           {inputError.phonenumber}
         </label>
@@ -410,7 +469,13 @@ const Register = (props) => {
     );
   return (
     <>
-      <button onClick={() => {}}>get usr</button>
+      {/* <button
+        onClick={() => {
+          setEmailAvailabilityLogo(null);
+        }}
+      >
+        get usr
+      </button> */}
       {wrongPathMsg}
       {registrationForm}
     </>

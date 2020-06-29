@@ -34,7 +34,7 @@ body {
   font-size: 14px;
   /* outline-color: red; */
   /* background-color: red; */
-  color: blue;
+  color: rgb(107, 57, 107);
   border-radius: 16px;
   text-align: center;
   padding: 2px 2px;
@@ -75,11 +75,14 @@ input:focus {
   outline: none;
 }
 .inputChange {
-  border: 1px solid blue;
+  border: 1.2px solid rgb(0, 60, 255);
   /* transition-duration: 10ms; */
 }
 .inputChangeError {
-  border: 1px solid red;
+  border: 1.2px solid red;
+}
+.inputChangeUnavailable {
+  border: 1.2px solid rgb(107, 57, 107);
 }
 .inputNotChange {
   height: 30%;
@@ -93,9 +96,9 @@ input:focus {
   margin-top: 3%;
   height: 5%;
   width: 5%; */
-  width: 4%;
+  width: 4.5%;
   height: 4%;
-  /* border-radius: 50%; */
+  border-radius: 50%;
   display: block;
   /* stroke-width: 2; */
   /* stroke: #fff; */
@@ -103,7 +106,8 @@ input:focus {
   /* margin-top: 0.5%; */
   padding-top: 0.5%;
   /* box-shadow: inset 0px 0px 0px #7ac142; */
-  animation: 0.2s ease-in-out 0.1s forwards, scale 0.3s ease-in-out 0.6s both;
+  animation: 0.2s ease-in-out 0.1s forwards, scale 0.2s ease-in-out 0.2s both;
+  transition-delay: 10s;
   /* transform-origin: 50% 50%; */
 }
 
@@ -114,7 +118,7 @@ input:focus {
   stroke-miterlimit: 10;
   stroke: #7ac142;
   fill: none;
-  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  animation: stroke 0.1s cubic-bezier(0.65, 0, 0.45, 1) forwards;
 }
 
 .checkmark {
@@ -126,15 +130,15 @@ input:focus {
   stroke: #fff;
   stroke-miterlimit: 10;
   box-shadow: inset 0px 0px 0px #7ac142;
-  animation: fill 0.2s ease-in-out 0.1s forwards,
-    scale 0.3s ease-in-out 0.9s both;
+  animation: fill 0.3s ease-in-out 0.1s forwards,
+    scale 0.3s ease-in-out 0.3s both;
 }
 
 .checkmark__check {
   transform-origin: 50% 50%;
   stroke-dasharray: 48;
   stroke-dashoffset: 48;
-  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards;
 }
 
 @keyframes stroke {
@@ -148,7 +152,7 @@ input:focus {
     transform: none;
   }
   50% {
-    transform: scale3d(1.6, 1.6, 1);
+    transform: scale3d(1.4, 1.4, 1);
   }
 }
 @keyframes fill {
