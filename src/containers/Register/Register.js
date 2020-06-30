@@ -177,9 +177,24 @@ const Register = (props) => {
   const handleRegister = (e) => {
     e.preventDefault();
     console.log("email: " + user.email);
-    // firebase.doCreateUserWithEmailAndPassword(user.email, user.password);
+    FirebaseStore.auth().createUserWithEmailAndPassword(
+      user.email,
+      user.password
+    );
+    const db = FirebaseStore.firestore();
+    db.collection("users")
+      .add({
+        email: user.email,
+        password: user.password,
+        name: user.name,
+        phonenumber: user.phonenumber,
+      })
+      .then((res) => {
+        console.log(res, "!!!!done");
+      })
+      .catch((rds) => console.log(rds));
 
-    // const db = firebase.firestore();
+    // const db = FirebaseStore.firestore();
     // db.collection("Testing")
     //   .doc("inTesting")
     //   .set({ name: "just a test" })

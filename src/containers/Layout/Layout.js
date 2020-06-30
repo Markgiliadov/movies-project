@@ -3,9 +3,17 @@ import loginContext from "../../Contexts/loginContext";
 import Toolbar from "../../components/Toolbar/Toolbar";
 // import fire from "../../FirebaseAuth/Fire";
 import Main from "../Main/Main";
-import firebaseContext from "../../Contexts/firebaseContext";
+//import firebaseContext from "../../Contexts/firebaseContext";
+import FirebaseStore from "../../FirebaseAuth/Firebase";
+
 const reducer = (state, action) => {
   switch (action.type) {
+    case "setLoginSpinnerStatus": {
+      return {
+        ...state,
+        loginSpinnerStatus: action.payload,
+      };
+    }
     case "spinnerStatus": {
       return {
         ...state,
@@ -33,8 +41,9 @@ const reducer = (state, action) => {
         },
       };
     }
+    //loggedIn: sets user to email, password from Login
     case "loggedIn": {
-      console.log(state, action.payload);
+      //  console.log(state, action.payload);
       return {
         ...state,
         loginStatus: true,
@@ -47,14 +56,14 @@ const reducer = (state, action) => {
         ...state,
         loginStatus: false,
         loginStateTkn: null,
-        user: null,
+        user: "",
         username: "",
         password: "",
       };
-    case "setUsername":
+    /*case "setUsername":
       return { ...state, username: action.payload };
     case "setPassword":
-      return { ...state, password: action.payload };
+      return { ...state, password: action.payload };*/
     default:
       return {
         loginStatus: null,
@@ -69,8 +78,9 @@ const reducer = (state, action) => {
   }
 };
 const Layout = (props) => {
-  const firebase = useContext(firebaseContext);
+  //const firebase = useContext(firebaseContext);
   const initialState = {
+    loginSpinnerStatus: "",
     loginStatus: false,
     username: "",
     password: "",
@@ -80,11 +90,16 @@ const Layout = (props) => {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const signOut = () => {
-    firebase.doSignOut().then((res) => {
-      console.log(state.loginStatus);
-      dispatch({ type: "loggedOut" });
-      localStorage.removeItem("JWT");
-    });
+    dispatch({ type: "setLoginSpinnerStatus", payload: true });
+    FirebaseStore.auth()
+      .signOut()
+      .then((res) => {
+        dispatch({ type: "setLoginSpinnerStatus", payload: false });
+        console.log(state.loginStatus);
+        dispatch({ type: "loggedOut" });
+        localStorage.removeItem("JWT");
+        localStorage.removeItem("email");
+      });
   };
 
   return (

@@ -1,3 +1,22 @@
+.form {
+  /* align-items: center; */
+  display: flex;
+  flex-direction: column;
+  max-width: 38em;
+  padding: 1em 3em 2em 3em;
+  margin: 0em auto;
+  background-color: white;
+  border-radius: br * 1.4;
+  box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 0.2);
+}
+.label {
+  width: 100%;
+  padding: 0.8em;
+  line-height: 1.4;
+  background-color: grey-lightest;
+  border: 1px solid gainsboro;
+  border-radius: 3px;
+}
 .Login_Form {
   align-items: center;
   display: flex;
@@ -19,7 +38,18 @@ body {
   color: grey-dark;
   background-color: grey-light;
 }
-
+.input {
+  width: 100%;
+  padding: 1em;
+  line-height: 1.4;
+  background-color: grey-lightest;
+  border: 1px solid grey;
+  border-radius: 3px;
+}
+textarea:focus,
+input:focus {
+  outline: none;
+}
 .Username {
   width: 100%;
   padding: 1em;
@@ -40,7 +70,7 @@ body {
 .Submit {
   /* margin: 4px; */
   /* width: 200px; */
-  display: inline;
+  display: block;
   padding: 1.15em 4em;
   border: 0.1em solid #ffffff;
   /* margin: 0 0.5em 0.6em 0.1em; */
@@ -62,4 +92,50 @@ body {
   color: #000000;
   background-color: #271d1d;
   border: 0.1em solid black;
+}
+.inputError {
+  font-size: 14px;
+  /* outline-color: red; */
+  /* background-color: red; */
+  color: red;
+  border-radius: 16px;
+  text-align: center;
+  padding: 2px 2px;
+  padding-left: 3px;
+  transition-duration: 500ms;
+  transition-property: color;
+  /* transform: translateY(20px); */
+  transition-timing-function: ease-in-out;
+  visibility: visible;
+}
+.inputErrorInvisible {
+  visibility: hidden;
+}
+.xicon {
+  /* margin-left: 1%;
+  margin-top: 3%;
+  height: 5%;
+  width: 5%; */
+  width: 4.5%;
+  height: 4%;
+  border-radius: 50%;
+  display: block;
+  /* stroke-width: 2; */
+  /* stroke: #fff; */
+  /* stroke-miterlimit: 10; */
+  /* margin-top: 0.5%; */
+  padding-top: 0.5%;
+  /* box-shadow: inset 0px 0px 0px #7ac142; */
+  animation: 0.2s ease-in-out 0.1s forwards, scale 0.2s ease-in-out 0.2s both;
+  transition-delay: 10s;
+  /* transform-origin: 50% 50%; */
+}
+@keyframes scale {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.4, 1.4, 1);
+  }
 }
