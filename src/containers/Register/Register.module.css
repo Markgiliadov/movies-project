@@ -90,6 +90,35 @@ input:focus {
 .inputOnFocus {
   color: cyan;
 }
+.submit {
+  /* margin: 4px; */
+  /* width: 200px; */
+  display: block;
+  padding: 1.15em 4em;
+  border: 0.1em solid #ffffff;
+  /* margin: 0 0.5em 0.6em 0.1em; */
+  /* margin-bottom: 8px; */
+  /* border-radius: %; */
+  /* box-sizing: border-box; */
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  color: #ffffff;
+  transition: all 0.4s;
+  /* padding-bottom: auto; */
+  background-color: gray;
+  /* height: 30px; */
+}
+/* .submit:focus{} */
+.submit:hover {
+  /* border-radius: 40%; */
+  border: 0.4em solid #706464;
+  color: #ffffff;
+  transform: scale(1.02);
+  /* color: #000000; */
+  background-color: #271d1d;
+  border: 0.1em solid black;
+}
 .xicon {
   /* margin-left: 1%;
   margin-top: 3%;
