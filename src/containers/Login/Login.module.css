@@ -1,5 +1,4 @@
 .form {
-  /* align-items: center; */
   display: flex;
   flex-direction: column;
   max-width: 38em;
@@ -17,24 +16,9 @@
   border: 1px solid gainsboro;
   border-radius: 3px;
 }
-/* .Login_Form {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
 
-  max-width: 38em;
-
-  padding: 1em 3em 2em 3em;
-  margin: 0em auto;
-  background-color: white;
-  border-radius: br * 1.4;
-  box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 0.2);
-} */
 body {
-  /* padding: 1em; */
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  /* font-size: 25px; */
-  /* font-size: 2vw; */
   color: grey-dark;
   background-color: grey-light;
 }
@@ -50,56 +34,26 @@ textarea:focus,
 input:focus {
   outline: none;
 }
-/* .Username {
-  width: 100%;
-  padding: 1em;
-  line-height: 1.4;
-  background-color: grey-lightest;
-  border: 1px solid grey;
-  border-radius: 3px;
-}
-.Password {
-  width: 100%;
-  padding: 1em;
-  line-height: 1.4;
-  background-color: grey-lightest;
-  border: 1px solid grey;
-  border-radius: 3px;
-} */
-
 .submit {
-  /* margin: 4px; */
-  /* width: 200px; */
   display: block;
   padding: 1.15em 4em;
   border: 0.1em solid #ffffff;
-  /* margin: 0 0.5em 0.6em 0.1em; */
-  /* margin-bottom: 8px; */
-  /* border-radius: %; */
-  /* box-sizing: border-box; */
   text-decoration: none;
   font-family: "Roboto", sans-serif;
   font-weight: 300;
   color: #ffffff;
-
   transition: all 0.4s;
-  /* padding-bottom: auto; */
   background-color: gray;
-  /* height: 30px; */
 }
 .submit:hover {
-  /* border-radius: 40%; */
   border: 0.4em solid #706464;
   color: #ffffff;
   transform: scale(1.02);
-
   background-color: #271d1d;
   border: 0.1em solid black;
 }
 .inputError {
   font-size: 14px;
-  /* outline-color: red; */
-  /* background-color: red; */
   color: red;
   border-radius: 16px;
   text-align: center;
@@ -107,7 +61,6 @@ input:focus {
   padding-left: 3px;
   transition-duration: 500ms;
   transition-property: color;
-  /* transform: translateY(20px); */
   transition-timing-function: ease-in-out;
   visibility: visible;
 }
@@ -115,23 +68,13 @@ input:focus {
   visibility: hidden;
 }
 .xicon {
-  /* margin-left: 1%;
-  margin-top: 3%;
-  height: 5%;
-  width: 5%; */
   width: 4.5%;
   height: 4%;
   border-radius: 50%;
   display: block;
-  /* stroke-width: 2; */
-  /* stroke: #fff; */
-  /* stroke-miterlimit: 10; */
-  /* margin-top: 0.5%; */
   padding-top: 0.5%;
-  /* box-shadow: inset 0px 0px 0px #7ac142; */
   animation: 0.2s ease-in-out 0.1s forwards, scale 0.2s ease-in-out 0.2s both;
   transition-delay: 10s;
-  /* transform-origin: 50% 50%; */
 }
 @keyframes scale {
   0%,

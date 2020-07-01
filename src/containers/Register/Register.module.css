@@ -1,5 +1,4 @@
 .form {
-  /* align-items: center; */
   display: flex;
   flex-direction: column;
   max-width: 38em;
@@ -18,21 +17,15 @@
   border-radius: 3px;
 }
 body {
-  /* padding: 1em; */
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  /* font-size: 25px; */
-  /* font-size: 2vw; */
   color: grey-dark;
   background-color: grey-light;
 }
 .inputErrorInvisible {
   height: -20px;
-  /* visibility: hidden; */
 }
 .inputUnavailable {
   font-size: 14px;
-  /* outline-color: red; */
-  /* background-color: red; */
   color: rgb(107, 57, 107);
   border-radius: 16px;
   text-align: center;
@@ -41,14 +34,12 @@ body {
   margin-top: 8px;
   transition-duration: 500ms;
   transition-property: color;
-  /* transform: translateY(20px); */
   transition-timing-function: ease-in-out;
   visibility: visible;
 }
 .inputError {
   font-size: 14px;
-  /* outline-color: red; */
-  /* background-color: red; */
+
   color: red;
   border-radius: 16px;
   text-align: center;
@@ -57,7 +48,6 @@ body {
   margin-top: 8px;
   transition-duration: 500ms;
   transition-property: color;
-  /* transform: translateY(20px); */
   transition-timing-function: ease-in-out;
   visibility: visible;
 }
@@ -74,14 +64,13 @@ input:focus {
   outline: none;
 }
 .inputChange {
-  border: 1.2px solid rgb(0, 60, 255);
-  /* transition-duration: 10ms; */
+  border: 1.05px solid rgb(0, 60, 255);
 }
 .inputChangeError {
-  border: 1.2px solid red;
+  border: 1.05px solid red;
 }
 .inputChangeUnavailable {
-  border: 1.2px solid rgb(107, 57, 107);
+  border: 1.05px solid rgb(107, 57, 107);
 }
 .inputNotChange {
   height: 30%;
@@ -91,52 +80,32 @@ input:focus {
   color: cyan;
 }
 .submit {
-  /* margin: 4px; */
-  /* width: 200px; */
   display: block;
   padding: 1.15em 4em;
   border: 0.1em solid #ffffff;
-  /* margin: 0 0.5em 0.6em 0.1em; */
-  /* margin-bottom: 8px; */
-  /* border-radius: %; */
-  /* box-sizing: border-box; */
   text-decoration: none;
   font-family: "Roboto", sans-serif;
   font-weight: 300;
   color: #ffffff;
   transition: all 0.4s;
-  /* padding-bottom: auto; */
   background-color: gray;
-  /* height: 30px; */
 }
-/* .submit:focus{} */
+
 .submit:hover {
-  /* border-radius: 40%; */
   border: 0.4em solid #706464;
   color: #ffffff;
   transform: scale(1.02);
-  /* color: #000000; */
   background-color: #271d1d;
   border: 0.1em solid black;
 }
 .xicon {
-  /* margin-left: 1%;
-  margin-top: 3%;
-  height: 5%;
-  width: 5%; */
   width: 4.5%;
   height: 4%;
   border-radius: 50%;
   display: block;
-  /* stroke-width: 2; */
-  /* stroke: #fff; */
-  /* stroke-miterlimit: 10; */
-  /* margin-top: 0.5%; */
   padding-top: 0.5%;
-  /* box-shadow: inset 0px 0px 0px #7ac142; */
   animation: 0.2s ease-in-out 0.1s forwards, scale 0.2s ease-in-out 0.2s both;
   transition-delay: 10s;
-  /* transform-origin: 50% 50%; */
 }
 
 .checkmark__circle {
