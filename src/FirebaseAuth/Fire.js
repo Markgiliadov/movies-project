@@ -11,8 +11,9 @@
 // // };
 // // const fire = firebase.initializeApp(firebaseConfig);
 // // export default fire;
+// import firestore from "firebase-firestore";
 // import firebase from "firebase/app";
-// // import firestore from "firebase-firestore";
+//
 // import "firebase/auth";
 // import "firebase/firestore";
 

@@ -2,33 +2,21 @@ import React, { useEffect, useState, useContext } from "react";
 import classes from "./Movie.module.css";
 import popularClasses from "../../containers/Movies/PopularMovies/PopularMovies.module.css";
 import Rating from "./Rating/Rating";
-// import MovieInformation from "./MovieInformation/MovieInformation";
+
 import loginContext from "../../Contexts/loginContext";
 import Button from "../Button/Button";
 const Movie = (props) => {
   const { state, dispatch } = useContext(loginContext);
 
-  // console.log(state);
   let attachedClasses = [popularClasses.container, classes.Close];
   const [myCStyle, setMyCStyle] = useState();
   const [popMovie, setPopMovie] = useState({});
-  const [myTitleStyle, setMyTitleStyle] = useState({
-    cursor: "pointer",
-    backgroundColor: "darkgrey",
-    borderRadius: "5px",
-  });
+  const [myTitleStyle, setMyTitleStyle] = useState([classes.movie_modal]);
   let searchedMovie = null;
   let otherMovie = null;
-  let movieInformation = null;
-  let movieTitle = (
-    <p className={classes.movieTitle} style={myTitleStyle}>
-      {popMovie.title}
-    </p>
-  );
-  // const setPopMovieInfo = () => {
+  let movieTitle = <p className={myTitleStyle}>{popMovie.title}</p>;
+
   useEffect(() => {
-    // movieTitle = <p className={classes.movieTitle}>{popMovie.title}</p>;
-    // console.log(state);
     setPopMovie({
       title: props.title,
       image: props.image,
@@ -56,7 +44,7 @@ const Movie = (props) => {
       </div>
     );
   } else {
-    // setPopMovieInfo();
+    // styling for other movies, not searched ones
     otherMovie = (
       <div className={attachedClasses}>
         <div className={popularClasses.movie_card}>
@@ -78,9 +66,7 @@ const Movie = (props) => {
   const handleMovieInformation = (props) => {
     console.log(popMovie);
     console.log("POP MOVIE" + state.payload.popMovie + "DONE");
-    // const movieInformation = {};
-    // console.log("title.... " + movieInformation.title);
-    // console.log(state.payload.movieInformation);
+
     let showModalToggle = state.payload.showModal;
     if (state.payload.popMovie === popMovie)
       showModalToggle = !state.payload.showModal;
@@ -93,7 +79,6 @@ const Movie = (props) => {
   };
   return (
     <>
-      {movieInformation}
       {searchedMovie}
       {!props.isSearched ? (
         <Button
@@ -101,26 +86,15 @@ const Movie = (props) => {
           style={{ cursor: "pointer" }}
           myFunction={handleMovieInformation}
           onHover={() => {
-            setMyCStyle({
-              ...myCStyle,
-              color: "red",
-              backgroundColor: "black",
-            });
-            setMyTitleStyle({
-              ...myTitleStyle,
-              height: "inherit",
-              color: "#c0bc93",
-              backgroundColor: "grey",
-            });
+            const hoverStyle = [classes.movie_modal, classes.movie_modal_hover];
+            setMyTitleStyle(hoverStyle.join(" "));
           }}
           leaveHover={() => {
-            setMyTitleStyle({
-              ...myTitleStyle,
-              height: "23px",
-
-              color: "white",
-              backgroundColor: "darkgrey",
-            });
+            const hoverStyle = [
+              classes.movie_modal,
+              classes.movie_modal_leaveHover,
+            ];
+            setMyTitleStyle(hoverStyle.join(" "));
           }}
         >
           {otherMovie}

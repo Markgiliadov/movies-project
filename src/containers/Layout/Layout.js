@@ -4,10 +4,12 @@ import Toolbar from "../../components/Toolbar/Toolbar";
 // import fire from "../../FirebaseAuth/Fire";
 import Main from "../Main/Main";
 //import firebaseContext from "../../Contexts/firebaseContext";
-import FirebaseStore from "../../FirebaseAuth/Firebase";
+import { FirebaseContext } from "../../FirebaseAuth/index";
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case "setJWT":
+      return { ...state, loginStateTkn: action.payload.loginStateTkn };
     case "setLoginSpinnerStatus": {
       return {
         ...state,
@@ -48,9 +50,9 @@ const reducer = (state, action) => {
         ...state,
         loginStatus: true,
         user: action.payload,
-        loginStateTkn: action.loginStateTkn,
       };
     }
+
     case "loggedOut":
       return {
         ...state,
@@ -78,6 +80,7 @@ const reducer = (state, action) => {
   }
 };
 const Layout = (props) => {
+  const Firebase = useContext(FirebaseContext);
   //const firebase = useContext(firebaseContext);
   const initialState = {
     loginSpinnerStatus: "",
@@ -91,7 +94,7 @@ const Layout = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const signOut = () => {
     dispatch({ type: "setLoginSpinnerStatus", payload: true });
-    FirebaseStore.auth()
+    Firebase.getAuth()
       .signOut()
       .then((res) => {
         dispatch({ type: "setLoginSpinnerStatus", payload: false });

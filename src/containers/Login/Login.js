@@ -3,15 +3,14 @@ import classes from "./Login.module.css";
 import loginContext from "../../Contexts/loginContext";
 import BarLoader from "react-spinners/BarLoader";
 import ClipLoader from "react-spinners/ClipLoader";
-import FirebaseStore from "../../FirebaseAuth/Firebase";
 import NotAvailableIcon from "../../Assets/NotAvailableEmailIcon/X-icon.png";
 
-import Firebase from "../../FirebaseAuth";
 import loginsidedrawer from "../../components/LoginSideDrawer/LoginSideDrawer";
+import { FirebaseContext } from "../../FirebaseAuth/index";
 
 const Login = (props) => {
-  //const firebase = useContext(firebaseContext);
   const { state, dispatch } = useContext(loginContext);
+  const Firebase = useContext(FirebaseContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsgInvalid, setErrorMsgInvalid] = useState(null);
@@ -23,21 +22,20 @@ const Login = (props) => {
     const data = localStorage.getItem("JWT");
 
     if (data) {
+      dispatch({ type: "setLoginSpinnerStatus", payload: false });
       dispatch({ type: "loggedIn", loginStateTkn: data });
       setUsername(localStorage.getItem("email"));
     } else dispatch({ type: "loggedOut", loginStateTkn: null });
   }, []);
 
   const validateUserWithFirestore = async (username, password) => {
-    const db = FirebaseStore.firestore();
+    const db = Firebase.getFirestore();
+
     let info = null;
     info = await db.collection("users").get();
     let checkifvalid = null;
     const isValidated = info.forEach((doc) => {
-      console.log(doc.data().email, doc.data().password);
-      console.log("myusername " + username, "mypassword " + password);
       if (doc.data().email == username && doc.data().password == password) {
-        // loginForm = null;
         checkifvalid = true;
         dispatch({ type: "setLoginSpinnerStatus", payload: true });
         setEmailAvailabilityLogo(null);
@@ -49,7 +47,7 @@ const Login = (props) => {
         dispatch({ type: "setLoginSpinnerStatus", payload: false });
       }
     });
-    console.log(checkifvalid);
+
     if (!checkifvalid)
       setErrorMsgInvalid(
         <h2 className={classes.inputError}>
@@ -59,20 +57,22 @@ const Login = (props) => {
       );
   };
   const signInWithFirebase = (username, password) => {
-    FirebaseStore.auth()
+    console.log(" user is " + username, password);
+
+    Firebase.getAuth()
       .signInWithEmailAndPassword(username, password)
       .then((res) => {
         console.log(res.user);
         dispatch({ type: "setUsername", payload: username });
         dispatch({ type: "setPassword", payload: password });
+        dispatch({
+          type: "loggedIn",
 
+          payload: { username: username, password: password },
+        });
         res.user.getIdTokenResult(true).then((tk) => {
           localStorage.setItem("JWT", tk.token);
-          dispatch({
-            type: "loggedIn",
-            loginStateTkn: tk.token,
-            payload: { username: username, password: password },
-          });
+          dispatch({ type: "setJWT", payload: tk.token });
           dispatch({ type: "setLoginSpinnerStatus", payload: false });
           setPassword(() => "");
           setUsername(() => "");
@@ -111,9 +111,7 @@ const Login = (props) => {
     }
   };
 
-  if (state.loginSpinnerStatus) {
-    loginForm = null;
-  } else if (state.loginStatus) {
+  if (state.loginSpinnerStatus || state.loginStatus) {
     loginForm = null;
   } else {
     loginForm = (

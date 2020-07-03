@@ -10,7 +10,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 const Home = (props) => {
   const { state, dispatch } = useContext(loginContext);
 
-  let popMovie = null;
+  let modalMovie = null;
   let allMovies = (
     <>
       <h1 onClick={() => {}} style={{ textAlign: "center" }}>
@@ -29,14 +29,14 @@ const Home = (props) => {
   );
 
   if (state.payload.showModal) {
-    popMovie = <MovieModal />;
+    modalMovie = <MovieModal />;
   } else {
-    popMovie = null;
+    modalMovie = null;
   }
   return (
     <div>
       {allMovies}
-      {popMovie}
+      {modalMovie}
       <ClipLoader
         css={{
           marginLeft: "40%",

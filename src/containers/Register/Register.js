@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import ButtonClass from "../../components/Button/Button.module.css";
-// import fire from "../../FirebaseAuth/Fire";
 import loginContext from "../../Contexts/loginContext";
 import firebaseContext from "../../Contexts/firebaseContext";
 import classes from "./Register.module.css";
 import ClipLoader from "react-spinners/ClipLoader";
-import FirebaseStore from "../../FirebaseAuth/Firebase";
+import { FirebaseContext } from "../../FirebaseAuth/index";
 import NotAvailableIcon from "../../Assets/NotAvailableEmailIcon/X-icon.png";
 const initialInputStyle = [classes.input, ""];
 const initialErrorMsgStyle = [classes.inputErrorInvisible, ""];
-const initialInputErrorState = {
+const initialInputState = {
   email: "",
   password: "",
   name: "",
@@ -17,9 +16,9 @@ const initialInputErrorState = {
 };
 
 const Register = (props) => {
+  const Firebase = useContext(FirebaseContext);
   const { state, dispatch } = useContext(loginContext);
-  // const firebase = useContext(firebaseContext);
-  const [inputError, setInputError] = useState(initialInputErrorState);
+  const [inputError, setInputError] = useState(initialInputState);
 
   const errorMessages = {
     badEmail: {
@@ -82,12 +81,7 @@ const Register = (props) => {
       ),
     },
   };
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-    name: "",
-    phonenumber: "",
-  });
+  const [user, setUser] = useState(initialInputState);
   const [inputsStyles, setInputsStyles] = useState({
     email: initialInputStyle,
     password: initialInputStyle,
@@ -95,10 +89,11 @@ const Register = (props) => {
     phonenumber: initialInputStyle,
   });
   const [loadingEmail, setLoadingEmail] = useState(false);
-  const [emailAvailability, setEmailAvailability] = useState(null);
-  const [valStatus, setValStatus] = useState(false);
+  const [
+    checkEmailAvailablityTrigger,
+    setCheckEmailAvailabilityTrigger,
+  ] = useState(null);
   const initialValidationStatus = Object.keys(user).length;
-  const [validationStatus, setValidationStatus] = useState(false);
   const [wrongPathMsg, setWrongPathMsg] = useState("");
   const [emailAvailabilityLogo, setEmailAvailabilityLogo] = useState(null);
   let registrationForm = null;
@@ -117,8 +112,73 @@ const Register = (props) => {
       props.history.push("/Register");
     } else setWrongPathMsg("");
   }, []);
-  useEffect(() => {
-    if (emailAvailability)
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const isInputValidated = inputValidation();
+    if (
+      isInputValidated === initialValidationStatus && // if all 4 error inputs don't contain errors
+      user.email &&
+      user.password &&
+      user.name &&
+      user.phonenumber
+    ) {
+      dispatch({ type: "setLoginSpinnerStatus", payload: true });
+      handleRegister(e);
+    } else alert("you must enter an input!");
+  };
+  const inputValidation = () => {
+    let count = initialValidationStatus;
+    Object.entries(inputError).map((ie) => {
+      if (ie[1].toString()) count = count - 1;
+    });
+    return count;
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+    props.history.push("/Login");
+    const db = Firebase.getFirestore();
+    Firebase.getAuth()
+      .createUserWithEmailAndPassword(user.email, user.password)
+      .then(() => {
+        signInWithFirebase(user.email, user.password);
+        db.collection("users").add({
+          email: user.email,
+          password: user.password,
+          name: user.name,
+          phonenumber: user.phonenumber,
+        });
+      })
+      .catch((err) => console.log(err));
+  };
+  const signInWithFirebase = (username, password) => {
+    Firebase.getAuth()
+      .signInWithEmailAndPassword(username, password)
+      .then((res) => {
+        dispatch({ type: "setUsername", payload: username });
+        dispatch({ type: "setPassword", payload: password });
+        dispatch({
+          type: "loggedIn",
+          payload: { username: username, password: password },
+        });
+        res.user.getIdTokenResult(true).then((tk) => {
+          localStorage.setItem("JWT", tk.token);
+
+          dispatch({ type: "setJWT", payload: tk.token });
+
+          dispatch({ type: "setLoginSpinnerStatus", payload: false });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleEmailAvailabilityLogo = (emailAvailable) => {
+    console.log(emailAvailable);
+    if (emailAvailable) {
+      console.log(user.email);
       setEmailAvailabilityLogo(
         <svg
           className={classes.checkmark}
@@ -139,95 +199,19 @@ const Register = (props) => {
           />
         </svg>
       );
-    else setEmailAvailabilityLogo(null);
-    console.log("email availability " + emailAvailability);
-  }, [emailAvailability]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const isInputValidated = inputValidation();
-    if (
-      isInputValidated === initialValidationStatus && // if all 4 error inputs don't contain errors
-      user.email &&
-      user.password &&
-      user.name &&
-      user.phonenumber
-    )
-      handleRegister(e);
-    else alert("you must enter an input!");
-  };
-  const inputValidation = () => {
-    let count = initialValidationStatus;
-    Object.entries(inputError).map((ie) => {
-      if (ie[1].toString()) count = count - 1;
-    });
-    return count;
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    dispatch({ type: "setLoginSpinnerStatus", payload: true });
-    const db = FirebaseStore.firestore();
-    console.log("email: " + user.email, user.pass);
-    FirebaseStore.auth()
-      .createUserWithEmailAndPassword(user.email, user.password)
-      .then(() => {
-        signInWithFirebase(user.email, user.password);
-
-        db.collection("users")
-          .add({
-            email: user.email,
-            password: user.password,
-            name: user.name,
-            phonenumber: user.phonenumber,
-          })
-          .then((res) => {
-            console.log(res, "!!!!done");
-          })
-          .catch((rds) => console.log(rds));
-      })
-      .catch((ss) => console.log(ss));
-    // const db = FirebaseStore.firestore();
-    // db.collection("Testing")
-    //   .doc("inTesting")
-    //   .set({ name: "just a test" })
-    //   .then((res) => {
-    //     console.log(res);
-    // firebase.doAddUser(user.email, user.password, user.name, user.phonenumber); // setUser(res.user);
-    // console.log(res);
-
-    // firebase.doSignInWithEmailAndPassword(res.email, res.password);
-    // })
-    // .catch((ex) => console.log(ex));
-    // firebase.doSignInWithEmailAndPassword(user.email, user.password);
-
-    props.history.push("/Login");
-  };
-  const signInWithFirebase = (username, password) => {
-    FirebaseStore.auth()
-      .signInWithEmailAndPassword(username, password)
-      .then((res) => {
-        console.log(res.user);
-        dispatch({ type: "setUsername", payload: username });
-        dispatch({ type: "setPassword", payload: password });
-
-        res.user.getIdTokenResult(true).then((tk) => {
-          localStorage.setItem("JWT", tk.token);
-          dispatch({
-            type: "loggedIn",
-            loginStateTkn: tk.token,
-            payload: { username: username, password: password },
-          });
-          dispatch({ type: "setLoginSpinnerStatus", payload: false });
-        });
-      })
-      .catch((res) => {
-        console.log("err " + res);
-      });
+      setLoadingEmail(false);
+    } else if (emailAvailable == false) {
+      setEmailAvailabilityLogo(
+        <img className={classes.xicon} src={NotAvailableIcon} />
+      );
+      setLoadingEmail(false);
+      // setEmailAvailabilityLogo(null);
+    }
   };
   const checkEmailAvailablity = async (valueEn) => {
-    const db = FirebaseStore.firestore();
+    const db = Firebase.getFirestore();
     let emailavailable = null;
+    let emailUnavailable = null;
     await db
       .collection("users")
       .get()
@@ -240,21 +224,18 @@ const Register = (props) => {
               errorMessages.badEmail.emailUnavailable,
               true
             );
-            setEmailAvailabilityLogo(
-              <img className={classes.xicon} src={NotAvailableIcon} />
-            );
-            return false;
+            emailUnavailable = true;
           } else {
             emailavailable = true;
+            setLoadingEmail(() => false);
           }
         });
-        setLoadingEmail(() => false);
-        return emailavailable;
       });
+    console.log(emailavailable, "OTHJER " + emailUnavailable);
+    if (emailUnavailable) handleEmailAvailabilityLogo(false);
+    else handleEmailAvailabilityLogo(true);
   };
   const handleEmailBadFormat = (valueEn) => {
-    console.log(valueEn);
-    // let valStatus = false;
     let firstStr = "";
     let secondStr = "";
     let thirdStr = "";
@@ -271,13 +252,13 @@ const Register = (props) => {
           [secondStr, thirdStr] = afterAt.split(".");
           if (secondStr.length > 0) {
             if (thirdStr.length > 1) {
-              // if (inputError.email) {
               setInputs("email", false);
-              // setUser({ ...user, ["email"]: valueEn });
-
               setLoadingEmail(true);
-              setEmailAvailability(() => checkEmailAvailablity(valueEn));
-              // }
+              setCheckEmailAvailabilityTrigger(
+                setTimeout(() => {
+                  checkEmailAvailablity(valueEn);
+                }, 1000)
+              );
             } else {
               setInputs(
                 "email",
@@ -305,8 +286,6 @@ const Register = (props) => {
     else setInputs("name", false);
   };
   const handlePhonenumberBadFormat = (valueEn, e) => {
-    console.log(valueEn);
-
     if (isNaN(valueEn) || valueEn.match(/\./g) || /\s/.test(valueEn))
       setInputs("phonenumber", true, errorMessages.phonenumber.notNumeric);
     else if (valueEn.length < 10 && valueEn.length > 0)
@@ -345,8 +324,6 @@ const Register = (props) => {
     }
   };
   const validation = (inputName, valueEn, e) => {
-    // setEmailAvailabilityLogo(null);
-
     if (valueEn.length > 0)
       switch (inputName) {
         case "email":
@@ -403,8 +380,9 @@ const Register = (props) => {
               placeholder="Email"
               value={user.email}
               onChange={(e) => {
+                setEmailAvailabilityLogo(null);
                 setLoadingEmail(false);
-                setEmailAvailability(false);
+                clearTimeout(checkEmailAvailablityTrigger);
                 handleInputChange(e);
               }}
             />

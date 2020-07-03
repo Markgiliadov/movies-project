@@ -9,7 +9,6 @@ import loginContext from "../../../Contexts/loginContext";
 
 const GeneralMovies = (props) => {
   const { state, dispatch } = useContext(loginContext);
-  // console.log(stateMovieContext);
   const [loading, setLoading] = useState(false);
   const [stateMovies, setStateMovies] = useState([]);
   const [inputEntered, setInputEntered] = useState(false);
@@ -23,26 +22,19 @@ const GeneralMovies = (props) => {
   let movieImg = null;
   let myStyle = null;
   let myInput = null;
-  // console.log("input entered " + inputEntered);
-  // const setLoadingState = () => {
-  //   setLoading();
-  // };
+
   data = useFetch(props, searchInput, setLoading, dispatch, state);
-  // const resolvingData = () => {
   Promise.resolve(data)
     .then((val) => {
       if (searchInput !== "" || !props.isSearched) {
         movies = [];
-
         setStateMovies(() => val);
-
         data = null;
       } else setInputEntered(false);
     })
     .catch((err) => console.log(err));
-  // };
+
   const searchMovie = (event) => {
-    // resolvingData();
     myInput = event.target.value;
     if (myInput) {
       setLoading(true);
@@ -52,47 +44,44 @@ const GeneralMovies = (props) => {
     setSearchInput(myInput);
   };
 
-  // console.log(data);
   if (!props.isSearched) {
     myStyle = classes.style;
-    stateMovies.splice(7, stateMovies.length - 7);
-  } else searchBar = <Searchbar onChange={searchMovie} />;
-  const moviesInit = () => {
-    if (inputEntered || !props.isSearched) {
-      movies = (
-        <div className={myStyle}>
-          {stateMovies.map((movie, index) => {
-            if (movie.poster_path) {
-              myPath = movie.poster_path;
-              movieImg = imgUrl + myPath;
-            } else if (movie.backdrop_path) {
-              myPath = movie.backdrop_path;
-              movieImg = imgUrl + myPath;
-            } else movieImg = noImg;
-            return (
-              <div key={movie.id}>
-                <Movie
-                  isSearched={props.isSearched}
-                  key={movie.id}
-                  title={movie.title}
-                  image={movieImg}
-                  description={movie.overview}
-                  name={movie.title}
-                  rating={movie.vote_average}
-                />
-              </div>
-            );
-          })}
-        </div>
-      );
-    } else
-      inputEnablerMsg = (
-        <p style={{ textAlign: "center" }}>
-          Please! enter a search input above! :)
-        </p>
-      );
-  };
-  moviesInit();
+    // stateMovies.splice(7, stateMovies.length - 7);
+  } else searchBar = <Searchbar onChange={(e) => searchMovie(e)} />;
+
+  if (inputEntered || !props.isSearched) {
+    movies = (
+      <div className={myStyle}>
+        {stateMovies.map((movie, index) => {
+          if (movie.poster_path) {
+            myPath = movie.poster_path;
+            movieImg = imgUrl + myPath;
+          } else if (movie.backdrop_path) {
+            myPath = movie.backdrop_path;
+            movieImg = imgUrl + myPath;
+          } else movieImg = noImg;
+          return (
+            <div key={movie.id}>
+              <Movie
+                isSearched={props.isSearched}
+                key={movie.id}
+                title={movie.title}
+                image={movieImg}
+                description={movie.overview}
+                name={movie.title}
+                rating={movie.vote_average}
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
+  } else
+    inputEnablerMsg = (
+      <p style={{ textAlign: "center" }}>
+        Please! enter a search input above! :)
+      </p>
+    );
 
   return (
     <>

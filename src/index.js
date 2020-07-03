@@ -7,9 +7,9 @@ import { BrowserRouter } from "react-router-dom";
 import Firebase, { FirebaseContext } from "./FirebaseAuth/index";
 const app = (
   <BrowserRouter>
-    {/* <FirebaseContext.Provider value={new Firebase()}> */}
-    <App />
-    {/* </FirebaseContext.Provider> */}
+    <FirebaseContext.Provider value={new Firebase()}>
+      <App />
+    </FirebaseContext.Provider>
   </BrowserRouter>
 );
 ReactDOM.render(app, document.getElementById("root"));

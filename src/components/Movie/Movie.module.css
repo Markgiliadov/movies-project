@@ -15,16 +15,35 @@ body {
   font-weight: 400;
   /* padding-left: 15px; */
 }
+.movie_modal {
+  display: inline-flexbox;
+  cursor: pointer;
+  background-color: darkgrey;
+  border-radius: 5px;
+  padding: 2px;
+  height: 20px;
 
+  overflow: hidden;
+}
+.movie_modal_hover {
+  height: inherit;
+  color: #c0bc93;
+  background-color: blue;
+}
+.movie_modal_leavehover {
+  height: 20px;
+  color: white;
+  background-color: darkgrey;
+}
 .movieTitle {
-  width: 100%;
+  /* width: 100%;
   background-color: rgb(46, 13, 13);
   height: 23px;
   border-radius: 2px;
   font-weight: 400;
   font-size: 15px;
   padding: 3px;
-  overflow: hidden;
+  overflow: hidden; */
   /* text-align: center; */
 }
 
