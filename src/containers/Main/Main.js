@@ -12,19 +12,14 @@ const Main = (props) => {
 
   return (
     <Switch>
-      <Route path="/Movies" component={Movies} />
+      <Route path="/Movies" render={(props) => <Movies {...props} />} />
       <Route path="/Login" render={(props) => <Login {...props} />} />
       <Route path="/About" render={() => <About />} />
       <Route path="/Register" render={(props) => <Register {...props} />} />
       <Route path="/" exact component={Home} />
       {/* <Route path="/:id" render={(props) => <Appforgag {...props} />} /> */}
       <Route path="" exact component={Home} />
-      <Route
-        path="*"
-        render={(props) => (
-          <Register {...props} isValidPath={props.match.path} />
-        )}
-      />
+      <Route path="*" render={(props) => <Register {...props} />} />
     </Switch>
   );
 };

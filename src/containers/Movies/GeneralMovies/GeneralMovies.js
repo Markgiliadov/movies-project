@@ -9,7 +9,7 @@ import loginContext from "../../../Contexts/loginContext";
 
 const GeneralMovies = (props) => {
   const { state, dispatch } = useContext(loginContext);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [stateMovies, setStateMovies] = useState([]);
   const [inputEntered, setInputEntered] = useState(false);
   const [searchInput, setSearchInput] = useState("");
@@ -23,12 +23,16 @@ const GeneralMovies = (props) => {
   let myStyle = null;
   let myInput = null;
 
-  data = useFetch(props, searchInput, setLoading, dispatch, state);
+  data = useFetch(props, searchInput, dispatch, state);
   Promise.resolve(data)
     .then((val) => {
       if (searchInput !== "" || !props.isSearched) {
         movies = [];
-        setStateMovies(() => val);
+        console.log(val);
+        setStateMovies(() => {
+          setInputEntered(true);
+          return val;
+        });
         data = null;
       } else setInputEntered(false);
     })
@@ -37,17 +41,18 @@ const GeneralMovies = (props) => {
   const searchMovie = (event) => {
     myInput = event.target.value;
     if (myInput) {
-      setLoading(true);
-      if (state) dispatch({ type: "spinnerStatus", loading: true }); //dispatch isnt a function?
-      setInputEntered(true);
+      // setLoading(true);
+      dispatch({ type: "spinnerStatus", payload: true }); //dispatch isnt a function?
     }
     setSearchInput(myInput);
   };
 
   if (!props.isSearched) {
     myStyle = classes.style;
-    // stateMovies.splice(7, stateMovies.length - 7);
-  } else searchBar = <Searchbar onChange={(e) => searchMovie(e)} />;
+  } else {
+    searchBar = <Searchbar onChange={(e) => searchMovie(e)} />;
+    myStyle = classes.searchedMovies;
+  }
 
   if (inputEntered || !props.isSearched) {
     movies = (
@@ -63,11 +68,19 @@ const GeneralMovies = (props) => {
           return (
             <div key={movie.id}>
               <Movie
+                {...props}
                 isSearched={props.isSearched}
                 key={movie.id}
                 title={movie.title}
-                image={movieImg}
                 description={movie.overview}
+                image={movieImg}
+                releaseDate={movie.release_date}
+                movieTimeMinutes={movie.runtime}
+                voteCount={movie.vote_count}
+                genres={movie.genres.map((genre, index) => {
+                  if (index === movie.genres.length - 1) return genre.name;
+                  else return genre.name + ", ";
+                })}
                 name={movie.title}
                 rating={movie.vote_average}
               />
@@ -78,22 +91,20 @@ const GeneralMovies = (props) => {
     );
   } else
     inputEnablerMsg = (
-      <p style={{ textAlign: "center" }}>
-        Please! enter a search input above! :)
-      </p>
+      <p style={{ textAlign: "center" }}>Please! enter a search input above!</p>
     );
 
   return (
     <>
       {searchBar}
       {inputEnablerMsg}
-      {movies}
       <ClipLoader
         css={{ marginLeft: "40%" }}
         size={150}
         color={"#123abc"}
-        loading={loading}
+        loading={state.loading}
       />
+      {movies}
     </>
   );
 };

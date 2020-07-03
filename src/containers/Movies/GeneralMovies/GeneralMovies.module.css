@@ -28,6 +28,16 @@
 /* hover {
   overflow: visible;
 } */
+.searchedMovies {
+  /* height: 100%; */
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  /* justify-content: space-around; */
+  /* justify-content: end; */
+
+  height: 1800px;
+}
 .style_onhover {
   overflow: visible;
 }

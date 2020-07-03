@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const useFetch = (props, searchInput, setLoading, dispatch, state) => {
+const useFetch = (props, searchInput, dispatch, state) => {
   const [stateMovies, setStateMovies] = useState([]);
 
   useEffect(() => {
@@ -39,8 +39,8 @@ const useFetch = (props, searchInput, setLoading, dispatch, state) => {
           })
           .catch((error) => console.log(error));
 
-        setLoading(false);
-        if (state) dispatch({ type: "spinnerStatus", loading: false });
+        // setLoading(false);
+        dispatch({ type: "spinnerStatus", payload: false });
       }
     };
 

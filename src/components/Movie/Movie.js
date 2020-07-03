@@ -26,21 +26,34 @@ const Movie = (props) => {
   // };
   if (props.isSearched) {
     searchedMovie = (
-      <div className={classes.movie_card}>
+      <div className={classes.movie_card} style={{ display: "flex" }}>
+        <img className={classes.locandina} src={props.image} alt="Movie" />
         <div className={classes.info_section}>
           <div className={classes.movie_header}>
             <h1>{props.title}</h1>
+            <h4>{props.releaseDate.split("-")[0]}</h4>
+            <span className={classes.minutes}>
+              {props.movieTimeMinutes} min
+            </span>
+            <p className={classes.type}>{props.genres}</p>
           </div>
-          <>
-            <img className={classes.Images} src={props.image} alt="Movie" />
-          </>
-          <div className={classes.rating}>
-            <Rating name={props.name} rating={props.rating} />
+          <div className={classes.movie_desc}>
+            <p className={classes.text}>{props.description}</p>
           </div>
+
+          {/* <img className={classes.Images} src={props.image} alt="Movie" /> */}
         </div>
-        <div className={classes.movie_desc}>
-          <p style={{ padding: "8px" }}>{props.description}</p>
-        </div>
+        {/* <div className={classes.rating}> */}
+        <Rating
+          {...props}
+          name={props.name}
+          rating={props.rating}
+          voteCount={props.voteCount}
+        />
+        {/* </div> */}
+        {/* <div className={classes.blur_back}> */}
+        {/* <img className={classes.Images} src={props.image} alt="Movie" /> */}
+        {/* </div> */}
       </div>
     );
   } else {

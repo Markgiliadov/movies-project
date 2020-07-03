@@ -1,9 +1,7 @@
 import React, { useEffect, useReducer, useContext } from "react";
 import loginContext from "../../Contexts/loginContext";
 import Toolbar from "../../components/Toolbar/Toolbar";
-// import fire from "../../FirebaseAuth/Fire";
 import Main from "../Main/Main";
-//import firebaseContext from "../../Contexts/firebaseContext";
 import { FirebaseContext } from "../../FirebaseAuth/index";
 
 const reducer = (state, action) => {
@@ -19,7 +17,7 @@ const reducer = (state, action) => {
     case "spinnerStatus": {
       return {
         ...state,
-        loading: action.loading,
+        loading: action.payload,
       };
     }
     case "showMovieInfo": {
@@ -72,9 +70,11 @@ const reducer = (state, action) => {
         user: null,
         loginStateTkn: null,
         showModal: null,
+        loading: false,
+        loginSpinnerStatus: "",
         payload: {
-          popMovie: null,
           showModal: false,
+          popMovie: "",
         },
       };
   }
@@ -88,7 +88,7 @@ const Layout = (props) => {
     username: "",
     password: "",
     loginStateTkn: null,
-    loading: true,
+    loading: false,
     payload: { showModal: false, popMovie: "" },
   };
   const [state, dispatch] = useReducer(reducer, initialState);
