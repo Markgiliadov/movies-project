@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import ButtonClass from "../../components/Button/Button.module.css";
 import loginContext from "../../Contexts/loginContext";
-import firebaseContext from "../../Contexts/firebaseContext";
 import classes from "./Register.module.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { FirebaseContext } from "../../FirebaseAuth/index";
 import NotAvailableIcon from "../../Assets/NotAvailableEmailIcon/X-icon.png";
 const initialInputStyle = [classes.input, ""];
-const initialErrorMsgStyle = [classes.inputErrorInvisible, ""];
+// const initialErrorMsgStyle = [classes.inputErrorInvisible, ""];
 const initialInputState = {
   email: "",
   password: "",
@@ -111,7 +109,7 @@ const Register = (props) => {
       );
       props.history.push("/Register");
     } else setWrongPathMsg("");
-  }, []);
+  }, [props.history, props.isValidPath, props.match.path]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -131,8 +129,8 @@ const Register = (props) => {
     let count = initialValidationStatus;
     Object.entries(inputError).map((ie) => {
       if (ie[1].toString()) count = count - 1;
+      return count;
     });
-    return count;
   };
 
   const handleRegister = (e) => {
@@ -169,6 +167,7 @@ const Register = (props) => {
           dispatch({ type: "setJWT", payload: tk.token });
 
           dispatch({ type: "setLoginSpinnerStatus", payload: false });
+          props.history.push("/");
         });
       })
       .catch((err) => {
@@ -200,9 +199,9 @@ const Register = (props) => {
         </svg>
       );
       setLoadingEmail(false);
-    } else if (emailAvailable == false) {
+    } else if (emailAvailable === false) {
       setEmailAvailabilityLogo(
-        <img className={classes.xicon} src={NotAvailableIcon} />
+        <img className={classes.xicon} src={NotAvailableIcon} alt="x-icon" />
       );
       setLoadingEmail(false);
       // setEmailAvailabilityLogo(null);
@@ -217,7 +216,7 @@ const Register = (props) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          if (doc.data().email == valueEn) {
+          if (doc.data().email === valueEn) {
             setInputs(
               "email",
               true,
@@ -239,7 +238,7 @@ const Register = (props) => {
     let firstStr = "";
     let secondStr = "";
     let thirdStr = "";
-    let tempVal = "";
+    // let tempVal = "";
     let afterAt = "";
 
     if (valueEn.includes("@")) {
@@ -327,24 +326,20 @@ const Register = (props) => {
     if (valueEn.length > 0)
       switch (inputName) {
         case "email":
-          {
-            handleEmailBadFormat(valueEn);
-          }
+          handleEmailBadFormat(valueEn);
+
           break;
         case "password":
-          {
-            handlePasswordBadFormat(valueEn);
-          }
+          handlePasswordBadFormat(valueEn);
+
           break;
         case "name":
-          {
-            handleNameBadFormat(valueEn);
-          }
+          handleNameBadFormat(valueEn);
+
           break;
         case "phonenumber":
-          {
-            handlePhonenumberBadFormat(valueEn);
-          }
+          handlePhonenumberBadFormat(valueEn);
+
           break;
         default: {
           setInputsStyles({ ...inputsStyles });

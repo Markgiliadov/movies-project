@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { Switch, Route } from "react-router-dom";
 import Movies from "../Movies/Movies";
 import Home from "../../components/Home/Home";
@@ -6,9 +6,9 @@ import Login from "../Login/Login";
 import Register from "../Register/Register";
 import About from "../../components/About/About";
 // import Appforgag from "../../components/Movie/MovieInformation/Appforgag";
-import loginContext from "../../Contexts/loginContext";
+// import loginContext from "../../Contexts/loginContext";
 const Main = (props) => {
-  const { state, dispatch } = useContext(loginContext);
+  // const { state, dispatch } = useContext(loginContext);
 
   return (
     <Switch>

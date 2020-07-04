@@ -1,26 +1,31 @@
 .movie_rating_card {
   position: relative;
   display: block;
-  width: 250px;
-  height: 250px;
-  margin: 20px auto;
-  overflow: hidden;
+  width: 200px;
+  background-color: inherit;
+  height: inherit;
+  /* margin: 10px auto; */
+  /* margin-top: -12px; */
+  /* margin-left: 20px; */
+  /* overflow: hidden;
   border-radius: 10px;
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
-  box-shadow: 0px 0px 120px -25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 120px -25px rgba(0, 0, 0, 0.5); */
+  /* align-content: center; */
+  /* align-items: center; */
 }
 
-.movie_rating_card:hover {
+/* .movie_rating_card:hover {
   -webkit-transform: scale(1.02);
-  transform: scale(1.12);
-  box-shadow: 0px 0px 80px -25px rgba(0, 0, 0, 0.5);
+  transform: scale(1.08);
+  box-shadow: 0px 0px 80px -25px rgba(90, 28, 28, 0.5);
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
-}
+} */
 .style {
-  margin-top: 10px;
-  height: fit-content;
+  /* margin-top: 10px; */
+  height: 40px;
   width: 60px;
   border-radius: 10px;
   padding: 8px;
@@ -28,19 +33,35 @@
   font-weight: 700;
   font-size: 20px;
   text-align: center;
-  background-color: rgb(126, 158, 185);
+  background-color: rgb(199, 214, 224);
 }
-.rating {
+.content_container {
   padding: 9px;
-  position: relative;
-  display: block;
-  width: 250px;
+  border-radius: 10px;
   height: inherit;
+  background-color: inherit;
+  /* position: relative; */
+  display: block;
+  /* .info_section { */
+  /* background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0%, lightgray),
+    to(white)
+  );
+  background: linear-gradient(to right, rgb(216, 210, 210) 5%, white 100%); */
+  /* } */
+  /* margin: 10px auto; */
+  /* border-radius: 10px; */
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+
   /* overflow: hidden; */
   /* border-radius: 10px; */
   /* -webkit-transition: all 0.4s; */
   /* transition: all 0.4s; */
-  box-shadow: 0px 20px 120px -25px rgba(238, 2, 2, 0.5);
+  box-shadow: 0px 20px 120px -25px rgba(58, 45, 45, 0.5);
 }
 .signUpButton {
   /* background-color: inherit; */
@@ -54,4 +75,46 @@
   margin: 10px;
   cursor: pointer;
   overflow: hidden;
+}
+.ratingModal {
+  z-index: 20;
+  width: auto;
+  height: auto;
+}
+
+.rate {
+  display: flex;
+  float: left;
+  height: 46px;
+  padding: 0 10px;
+}
+.rate:not(:checked) > input {
+  position: absolute;
+  top: -9999px;
+}
+.rate:not(:checked) > label {
+  float: right;
+  width: 1em;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 30px;
+  color: #ccc;
+}
+.rate:not(:checked) > label:before {
+  content: "★ ";
+}
+.rate > input:checked ~ label {
+  color: #ffc700;
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+  color: #deb217;
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+  color: #c59b08;
 }

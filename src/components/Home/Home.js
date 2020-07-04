@@ -8,12 +8,16 @@ import MovieModal from "../Movie/MovieModal/MovieModal";
 import ClipLoader from "react-spinners/ClipLoader";
 
 const Home = (props) => {
-  const { state, dispatch } = useContext(loginContext);
+  const { state } = useContext(loginContext);
 
   let modalMovie = null;
   let allMovies = (
     <>
-      <h1 onClick={() => {}} style={{ textAlign: "center" }}>
+      <h1
+        className={classes.h1}
+        onClick={() => {}}
+        style={{ textAlign: "center" }}
+      >
         Upcoming Movies
       </h1>
       <UpcomingMovies />

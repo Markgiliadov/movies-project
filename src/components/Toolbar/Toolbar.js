@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import classes from "./Toolbar.module.css";
 import { NavLink } from "react-router-dom";
 import Button from "../Button/Button";
 // import { useState } from "react";
 import Logo from "../Logo/Logo";
-import loginContext from "../../Contexts/loginContext";
+// import loginContext from "../../Contexts/loginContext";
 // import LoginSideDrawer from "../LoginSideDrawer/LoginSideDrawer";
 const Toolbar = (props) => {
   // const { state, dispatch } = useContext(loginContext);

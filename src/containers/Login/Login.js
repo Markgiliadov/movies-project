@@ -5,7 +5,7 @@ import BarLoader from "react-spinners/BarLoader";
 import ClipLoader from "react-spinners/ClipLoader";
 import NotAvailableIcon from "../../Assets/NotAvailableEmailIcon/X-icon.png";
 
-import loginsidedrawer from "../../components/LoginSideDrawer/LoginSideDrawer";
+// import loginsidedrawer from "../../components/LoginSideDrawer/LoginSideDrawer";
 import { FirebaseContext } from "../../FirebaseAuth/index";
 
 const Login = (props) => {
@@ -26,7 +26,7 @@ const Login = (props) => {
       dispatch({ type: "loggedIn", loginStateTkn: data });
       setUsername(localStorage.getItem("email"));
     } else dispatch({ type: "loggedOut", loginStateTkn: null });
-  }, []);
+  }, [dispatch]);
 
   const validateUserWithFirestore = async (username, password) => {
     const db = Firebase.getFirestore();
@@ -34,8 +34,8 @@ const Login = (props) => {
     let info = null;
     info = await db.collection("users").get();
     let checkifvalid = null;
-    const isValidated = info.forEach((doc) => {
-      if (doc.data().email == username && doc.data().password == password) {
+    info.forEach((doc) => {
+      if (doc.data().email === username && doc.data().password === password) {
         checkifvalid = true;
         dispatch({ type: "setLoginSpinnerStatus", payload: true });
         setEmailAvailabilityLogo(null);
@@ -76,6 +76,7 @@ const Login = (props) => {
           dispatch({ type: "setLoginSpinnerStatus", payload: false });
           setPassword(() => "");
           setUsername(() => "");
+          props.history.push("/");
         });
       })
       .catch((res) => {
@@ -87,7 +88,7 @@ const Login = (props) => {
     setLoadingValidation(true);
 
     if (
-      username.length == 0 ||
+      username.length === 0 ||
       !username.includes("@") ||
       !username.includes(".") ||
       password.length < 6
@@ -105,7 +106,7 @@ const Login = (props) => {
     } else {
       setErrorMsgInvalid(null);
       setEmailAvailabilityLogo(
-        <img className={classes.xicon} src={NotAvailableIcon} />
+        <img className={classes.xicon} src={NotAvailableIcon} alt="x-icon" />
       );
       validateUserWithFirestore(username, password);
     }

@@ -7,7 +7,7 @@ const useFetch = (props, searchInput, dispatch, state) => {
     // setStateMovies([]);
     let movieUrl = "";
     let myMovies = [];
-    let id_info = [];
+    // let id_info = [];
     let urlString = "";
     let baseUrl = "";
     let midUrl = "";
@@ -45,7 +45,16 @@ const useFetch = (props, searchInput, dispatch, state) => {
     };
 
     FetchingTheMovies(searchInput);
-  }, [searchInput]);
+  }, [
+    searchInput,
+    dispatch,
+    props.API_KEY_MOVIE,
+    props.API_KEY_SEARCH,
+    props.baseMovieUrl,
+    props.baseNotSearchedUrl,
+    props.baseSearchUrl,
+    props.isSearched,
+  ]);
 
   return stateMovies;
 };

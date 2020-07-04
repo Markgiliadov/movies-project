@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import Movie from "../../../components/Movie/Movie";
 import useFetch from "./useFetch";
 import classes from "./GeneralMovies.module.css";
